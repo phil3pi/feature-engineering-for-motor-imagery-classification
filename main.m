@@ -7,7 +7,7 @@ load(sprintf('./Training Data/DATAall_cleaneog_A0%dT_Fs250',sub))
 % artifacts=find(artifactsall==1);
 % eeg(:,:,artifacts)=[];
 % laball(artifacts)=[];
-% [Channels,N,trials]=size(eeg);
+[Channels,N,trials]=size(eeg);
 
 %Create cross-validation indices (10-fold)
 kfolds=10;

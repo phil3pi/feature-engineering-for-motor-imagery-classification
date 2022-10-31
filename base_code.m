@@ -4,9 +4,9 @@ Fs=250; %sampling rate
 %Load data
 load(sprintf('./Training Data/DATAall_cleaneog_A0%dT_Fs250',sub))
 %Remove artifactual trials
-% artifacts=find(artifactsall==1);
-% eeg(:,:,artifacts)=[];
-% laball(artifacts)=[];
+artifacts=find(artifactsall==1);
+eeg(:,:,artifacts)=[];
+laball(artifacts)=[];
 [Channels,N,trials]=size(eeg);
 
 %Create cross-validation indices (10-fold)

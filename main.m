@@ -42,22 +42,25 @@ for kf=1:kfolds
 
     for n=window_size+1:window_size:N
         disp([kf n])
-
-        x_train=permute(eeg(:,n-window_size:n,train_indexes),[3 1 2]); %Take win time points before the current time point up till the current time point (it's causal)
-        x_train=x_train(:,:); %Xtrain is of dimension [number of training trials x number of features]
+        train_data=eeg(:,n-window_size:n,train_indexes);
+        % statistic_features=statistic_extractor(train_data);
+        x_train=permute(train_data,[3 1 2]); %Take win time points before the current time point up till the current time point (it's causal)
+        x_train=x_train(:,:); % x_train is of dimension [number of training trials x number of features]
+        %x_train=horzcat(x_train, k_train, s_train);
         y_train=laball(train_indexes);
 
-        x_test=permute(eeg(:,n-window_size:n,test_indexes),[3 1 2]);
-        x_test=x_test(:,:); %Xtest is of dimension [number of testing trials x number of features]
+        test_data=eeg(:,n-window_size:n,test_indexes);
+        x_test=permute(test_data,[3 1 2]);
+        x_test=x_test(:,:); % x_test is of dimension [number of testing trials x number of features]
         y_test=laball(test_indexes);
 
-        [model_lda]=lda_train(x_train,y_train); %Train on training data
-        [y_pred]=lda_predict(model_lda,x_test); %Test on testing data
+        [model_lda]=lda_train(x_train,y_train); % Train on training data
+        [y_pred]=lda_predict(model_lda,x_test); % Test on testing data
 
         c_matrix=confusionmat(y_test,y_pred);
-        [accuracy(n,kf)] = statsOfMeasure(c_matrix); %Estimate accuracy
+        [accuracy(n,kf)] = statsOfMeasure(c_matrix); % Estimate accuracy
 
-        %Get chance level by permuting randomly the input matrix Xtest
+        % Get chance level by permuting randomly the input matrix x_test
         permuted_inds=randsample(length(y_test),length(y_test));
         x_test_perm=x_test(permuted_inds,:);
         [y_pred] = lda_predict(model_lda,x_test_perm); %Test on testing data

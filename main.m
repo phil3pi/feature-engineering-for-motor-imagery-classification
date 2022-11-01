@@ -40,7 +40,7 @@ for kf=1:kfolds
     test_indexes=find(cv_indixes==kf);
     train_indexes=find(cv_indixes~=kf);
 
-    for n=window_size+1:25:N
+    for n=window_size+1:window_size:N
         disp([kf n])
 
         x_train=permute(eeg(:,n-window_size:n,train_indexes),[3 1 2]); %Take win time points before the current time point up till the current time point (it's causal)
@@ -73,7 +73,7 @@ mean_accuracy_chance=100*nanmean(accuracy_chance,2); %average over all fold
 sampling_rate=250;
 time=((0:N-1)/sampling_rate)-2; %in seconds; cue onset starts 2 seconds after the trial start. Cue onset is indicate with 0s
 
-figure;plot(time(window_size+1:25:N),mean_accuracy(window_size+1:25:N));
-hold on;plot(time(window_size+1:25:N),mean_accuracy_chance(window_size+1:25:N),'k:');
+figure;plot(time(window_size+1:window_size:N),mean_accuracy(window_size+1:window_size:N));
+hold on;plot(time(window_size+1:window_size:N),mean_accuracy_chance(window_size+1:window_size:N),'k:');
 xlabel('s')
 ylabel('Accuracy(%)')

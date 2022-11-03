@@ -64,14 +64,14 @@ for kf=1:kfolds
         [y_pred]=lda_predict(model_lda,x_test); % Test on testing data
 
         c_matrix=confusionmat(y_test,y_pred);
-        [accuracy(n,kf),kappa(n,kf)] = statsOfMeasure(c_matrix); % Estimate accuracy
+        [accuracy(n,kf),kappa(n,kf)] = stats_of_measure(c_matrix); % Estimate accuracy
 
         % Get chance level by permuting randomly the input matrix x_test
         permuted_inds=randsample(length(y_test),length(y_test));
         x_test_perm=x_test(permuted_inds,:);
         [y_pred] = lda_predict(model_lda,x_test_perm); %Test on testing data
         c_matrix=confusionmat(y_test,y_pred); %Compute confusion matrix
-        [accuracy_chance(n,kf),kappa_chance(n,kf)] = statsOfMeasure(c_matrix); %Estimate accuracy  
+        [accuracy_chance(n,kf),kappa_chance(n,kf)] = stats_of_measure(c_matrix); %Estimate accuracy  
     end
 end
 

@@ -28,8 +28,8 @@ entropy_data=nan(channels,1,trials);
 for t=1:1:trials
     for c=1:1:channels
         % TODO: check if calculation is correct
-        [~,lag]=phaseSpaceReconstruction(data(c,:,t),[]);
-        entropy_data(c,1,t)=approximateEntropy(data(c,:,t),lag);
+        % [~,lag]=phaseSpaceReconstruction(data(c,:,t),[]);
+        entropy_data(c,1,t)=approximateEntropy(data(c,:,t));
     end
 end
 statistic_features=[max_data,min_data,mean_data,median_data,std_data,skewness_data,kurtosis_data,rms_data,prctile_data,entropy_data];

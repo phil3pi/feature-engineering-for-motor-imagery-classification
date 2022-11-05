@@ -1,5 +1,5 @@
 
-function [acc,kappa] = statsOfMeasure(c_matrix)
+function [acc,kappa] = stats_of_measure(c_matrix)
 %Compute accuracy based on the confusion matrix c_matrix
 n_class=size(c_matrix,1);
 TP=zeros(1,n_class);

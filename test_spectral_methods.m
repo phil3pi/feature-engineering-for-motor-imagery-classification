@@ -9,7 +9,7 @@ load(sprintf('./Training Data/DATAall_cleaneog_A0%dT_Fs250',patient_id));
 x=eeg(1,:,1);
 fs=250; %sampling rate
 
-t=tiledlayout(2,2);
+t=tiledlayout(3,2);
 t.TileSpacing='compact';
 
 nexttile;
@@ -55,4 +55,14 @@ plot(f,PdB_Hz);
 title('Welch`s PSD')
 xlabel('Hz')
 ylabel('dBW/Hz')
+
+nexttile;
+% print wavelet transformation
+% TODO: checkout cwtfilterbank: https://de.mathworks.com/help/wavelet/ref/cwtfilterbank.html
+[wt,f]=cwt(x,fs);
+plot(f,wt);
+title('CWT')
+xlabel('Hz')
+ylabel('Amplitude')
+
 

@@ -16,9 +16,9 @@ nexttile;
 % print pure amplitude signal
 time=((0:N-1)/fs)-2;
 plot(time,x);
-title('Time domain')
+title('Signal data')
 xlabel('s')
-ylabel('signal [µV]')
+ylabel('amplitude [µV]')
 
 nexttile;
 % TODO: check fft2,fftn,fft2n,fftw,fftshift,ifft,fftfilt
@@ -44,7 +44,7 @@ window=hanning(nfft);
 % window=rectwin(nfft);
 [pxx,f]=pwelch(x,window,noverlap,nfft,fs);
 plot(f,pxx);
-title('Welch Power Spectral density estimate')
+title('Welch`s PSD')
 xlabel('Hz')
 ylabel('W/Hz')
 
@@ -52,7 +52,7 @@ nexttile;
 % print scaled power spectral density by logarithm
 PdB_Hz= 10*log10(pxx);
 plot(f,PdB_Hz);
-title('Welch Power Spectral density estimate')
+title('Welch`s PSD')
 xlabel('Hz')
 ylabel('dBW/Hz')
 

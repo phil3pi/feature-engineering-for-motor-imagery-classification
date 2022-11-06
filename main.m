@@ -31,6 +31,7 @@ cv_indixes = crossvalind('kfold',laball,kfolds);
 
 % number of samples
 window_size=10;
+fs=250; % sampling rate
 
 %Train-test using sLDA and cross-validation
 accuracy=nan(N,kfolds);
@@ -45,6 +46,7 @@ for kf=1:kfolds
     for n=window_size+1:25:N
         disp([kf n])
         train_data=eeg(:,n-window_size:n,train_indexes);
+        train_data=psd_extractor(train_data,fs);
         %s_features_train=statistic_extractor(train_data);
         %train_data=horzcat(train_data, s_features_train);
         %train_data=s_features_train;
@@ -53,6 +55,7 @@ for kf=1:kfolds
         y_train=laball(train_indexes);
 
         test_data=eeg(:,n-window_size:n,test_indexes);
+        test_data=psd_extractor(test_data,fs);
         %s_features_test=statistic_extractor(test_data);
         %test_data=horzcat(test_data, s_features_test);
         %test_data=s_features_test;
@@ -81,8 +84,7 @@ mean_kappa=nanmean(kappa,2); %average over all fold
 mean_kappa_chance=nanmean(kappa_chance,2); %average over all fold
 
 %Plot the average testing accuracy as a function of time
-sampling_rate=250;
-time=((0:N-1)/sampling_rate)-2; %in seconds; cue onset starts 2 seconds after the trial start. Cue onset is indicate with 0s
+time=((0:N-1)/fs)-2; %in seconds; cue onset starts 2 seconds after the trial start. Cue onset is indicate with 0s
 
 % print accuracy value
 figure;plot(time(window_size+1:25:N),mean_accuracy(window_size+1:25:N));

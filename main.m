@@ -46,7 +46,7 @@ for kf=1:kfolds
     for n=window_size+1:25:N
         disp([kf n])
         train_data=eeg(:,n-window_size:n,train_indexes);
-        train_data=psd_extractor(train_data,fs);
+        %train_data=psd_extractor(train_data,fs);
         %s_features_train=statistic_extractor(train_data);
         %train_data=horzcat(train_data, s_features_train);
         %train_data=s_features_train;
@@ -55,7 +55,7 @@ for kf=1:kfolds
         y_train=laball(train_indexes);
 
         test_data=eeg(:,n-window_size:n,test_indexes);
-        test_data=psd_extractor(test_data,fs);
+        %test_data=psd_extractor(test_data,fs);
         %s_features_test=statistic_extractor(test_data);
         %test_data=horzcat(test_data, s_features_test);
         %test_data=s_features_test;
@@ -77,22 +77,30 @@ for kf=1:kfolds
         [accuracy_chance(n,kf),kappa_chance(n,kf)] = stats_of_measure(c_matrix); %Estimate accuracy  
     end
 end
-
+time=((0:N-1)/fs)-2; %in seconds; cue onset starts 2 seconds after the trial start. Cue onset is indicate with 0s
+%
+% Below is only plotting stuff
+%
+t=tiledlayout(2,1);
+t.TileSpacing='loose';
+title(t,'Performance measures of classification')
+nexttile;
+% plot the average testing accuracy as a function of time
+% print accuracy value
 mean_accuracy=100*nanmean(accuracy,2); %average over all fold
 mean_accuracy_chance=100*nanmean(accuracy_chance,2); %average over all fold
+plot(time(window_size+1:25:N),mean_accuracy(window_size+1:25:N));
+hold on;
+plot(time(window_size+1:25:N),mean_accuracy_chance(window_size+1:25:N),'k:');
+xlabel('time [s]')
+ylabel('accuracy [%]')
+nexttile;
+% plot the average testing kappa value as a function of time
+% print kappa value
 mean_kappa=nanmean(kappa,2); %average over all fold
 mean_kappa_chance=nanmean(kappa_chance,2); %average over all fold
-
-%Plot the average testing accuracy as a function of time
-time=((0:N-1)/fs)-2; %in seconds; cue onset starts 2 seconds after the trial start. Cue onset is indicate with 0s
-
-% print accuracy value
-figure;plot(time(window_size+1:25:N),mean_accuracy(window_size+1:25:N));
-hold on;plot(time(window_size+1:25:N),mean_accuracy_chance(window_size+1:25:N),'k:');
-xlabel('s')
-ylabel('Accuracy(%)')
-% print kappa value
-figure;plot(time(window_size+1:25:N),mean_kappa(window_size+1:25:N));
-hold on;plot(time(window_size+1:25:N),mean_kappa_chance(window_size+1:25:N),'k:');
-xlabel('s')
-ylabel('kappa')
+plot(time(window_size+1:25:N),mean_kappa(window_size+1:25:N));
+hold on;
+plot(time(window_size+1:25:N),mean_kappa_chance(window_size+1:25:N),'k:');
+xlabel('time [s]')
+ylabel('cohen`s kappa')

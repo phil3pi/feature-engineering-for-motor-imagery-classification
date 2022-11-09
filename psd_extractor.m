@@ -1,20 +1,24 @@
 function [psd] = psd_extractor(eeg,fs)
 % Calculate and returns the welch's power spectral density estimate
+
+% delta theta alpha beta gamma high gamma broad
+bands=[0.1 3.5; 4 7.5; 8 12.5; 13 29.5; 30 60; 60.5 100; 0.1 100];
 [channels,N,trials]=size(eeg);
 nfft=N;
 pxx_length=inline_if(mod(nfft,2)==0,(nfft/2+1),(nfft+1)/2);
-noverlap=nfft/2;
 % TODO: check different windowing methods
-window=hanning(nfft);
 % window=hamming(nfft);
 % window=rectwin(nfft);
-psd=nan(channels,pxx_length,trials);
+psd=nan(channels,7,trials);
 for trial=1:trials
-    for channel=1:channels
-        x=eeg(channel,:,trial);
-        [pxx,~]=pwelch(x,window,noverlap,nfft,fs);
-        psd(channel,:,trial)=pxx;
-    end
+        x=squeeze(eeg(:,:,trial))';
+        [pxx,f]=pwelch(x,[],[],[],fs);
+        for j=1:size(bands,1)
+            [mm,ii1]=min(abs(f-bands(j,1)));
+            [mm,ii2]=min(abs(f-bands(j,2)));
+                    psd(:,j,trial)=mean(pxx(ii1:ii2,:));
+        end
+
 end
-end
+
 

@@ -19,8 +19,9 @@ acc=sum((TP)./(P+N));
 % calculate cohen's kappa measure
 % used the following kappa calculation described here:
 % https://de.mathworks.com/matlabcentral/answers/505881-how-to-get-accuracy-rate-error-rate-precission-recall-and-kappa-for-fitglm-model
-P0=(TP+TN)./(P+N);
-Pe=(((TP+FP)./(P+N)).*((TP+FN)./(P+N)))+(((TN+FN)./(P+N)).*((FP+TN)./(P+N)));
-kappa=sum((P0-Pe)./(1-Pe));
+% P0=(TP+TN)./(P+N);
+% Pe=(((TP+FP)./(P+N)).*((TP+FN)./(P+N)))+(((TN+FN)./(P+N)).*((FP+TN)./(P+N)));
+% kappa=sum((P0-Pe)./(1-Pe));
 
+kappa=cohens_kappa(c_matrix);
 end

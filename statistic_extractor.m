@@ -18,7 +18,8 @@ skewness_data=skewness(data(:,:,:),1,2);
 % moment_order=4;
 % moment_data=moment(data(:,:,:),moment_order,2);
 
-rms_data=rms(data(:,:,:),2); % root-mean-square value
+% do not use this feature, indirectly contained by psd
+%rms_data=rms(data(:,:,:),2); % root-mean-square value
 % TODO: play around with the value
 percentile=50;
 prctile_data=prctile(data(:,:,:),percentile,2);

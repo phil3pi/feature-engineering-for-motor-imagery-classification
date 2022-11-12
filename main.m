@@ -1,7 +1,8 @@
 % clear workspace, functionspace and figures
 close all;clear all;
-%setup multithreading
-parpool(12);
+% TODO: take care for out of memory exception
+setup_multithreading(8);
+
 patient_id=1;
 % here eeg, laball, artifactsall is loaded
 load(sprintf('./Training Data/DATAall_cleaneog_A0%dT_Fs250',patient_id));
@@ -31,7 +32,7 @@ rng('default')
 cv_indixes = crossvalind('kfold',laball,kfolds);
 
 % number of samples
-window_size=100;
+window_size=10;
 fs=250; % sampling rate
 
 %Train-test using sLDA and cross-validation
@@ -89,8 +90,8 @@ title(t,'Performance measures of classification')
 nexttile;
 % plot the average testing accuracy as a function of time
 % print accuracy value
-mean_accuracy=100*nanmean(accuracy,2); %average over all fold
-mean_accuracy_chance=100*nanmean(accuracy_chance,2); %average over all fold
+mean_accuracy=100*mean(accuracy,2); %average over all fold
+mean_accuracy_chance=100*mean(accuracy_chance,2); %average over all fold
 plot(time(window_size+1:window_size:N),mean_accuracy);
 hold on;
 plot(time(window_size+1:window_size:N),mean_accuracy_chance,'k:');
@@ -101,11 +102,12 @@ ylim([10 50])
 nexttile;
 % plot the average testing kappa value as a function of time
 % print kappa value
-mean_kappa=nanmean(kappa,2); %average over all fold
-mean_kappa_chance=nanmean(kappa_chance,2); %average over all fold
+mean_kappa=mean(kappa,2); %average over all fold
+mean_kappa_chance=mean(kappa_chance,2); %average over all fold
 plot(time(window_size+1:window_size:N),mean_kappa);
 hold on;
 plot(time(window_size+1:window_size:N),mean_kappa_chance,'k:');
 xlabel('time [s]')
 ylabel('cohen`s kappa')
-ylim([10 50])
+ylim([0 1])
+

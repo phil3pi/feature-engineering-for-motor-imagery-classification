@@ -1,11 +1,17 @@
 % clear workspace, functionspace and figures
 close all;clear all;
+
+addpath('classifiers/');
+addpath('extractors/');
+addpath('utils/');
+addpath('tests/')
+
 % TODO: take care for out of memory exception
 setup_multithreading(8);
 
 patient_id=1;
 % here eeg, laball, artifactsall is loaded
-load(sprintf('./Training Data/DATAall_cleaneog_A0%dT_Fs250',patient_id));
+load(sprintf('../dataset/Training Data/DATAall_cleaneog_A0%dT_Fs250',patient_id));
 
 %Remove artifactual trials
 artifacts=find(artifactsall==1);

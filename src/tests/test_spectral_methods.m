@@ -3,7 +3,7 @@ close all;clear all;
 
 patient_id=1;
 % here eeg, laball, artifactsall is loaded
-load(sprintf('./Training Data/DATAall_cleaneog_A0%dT_Fs250',patient_id));
+load(sprintf('../dataset/Training Data/DATAall_cleaneog_A0%dT_Fs250',patient_id));
 [channels,N,trials]=size(eeg);
 
 x=eeg(1,:,1);

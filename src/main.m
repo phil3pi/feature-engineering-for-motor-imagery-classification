@@ -1,7 +1,7 @@
 % clear workspace, functionspace and figures
 close all;clear all;
 
-addpath('classifiers/');
+addpath('classifiers/lda');
 addpath('extractors/');
 addpath('utils/');
 addpath('tests/')
@@ -86,34 +86,5 @@ for kf=1:kfolds
         [accuracy_chance(n,kf),kappa_chance(n,kf)] = stats_of_measure(c_matrix); %Estimate accuracy  
     end
 end
-time=((0:N-1)/fs)-2; %in seconds; cue onset starts 2 seconds after the trial start. Cue onset is indicate with 0s
-%
-% Below is only plotting stuff
-%
-t=tiledlayout(2,1);
-t.TileSpacing='loose';
-title(t,'Performance measures of classification')
-nexttile;
-% plot the average testing accuracy as a function of time
-% print accuracy value
-mean_accuracy=100*mean(accuracy,2); %average over all fold
-mean_accuracy_chance=100*mean(accuracy_chance,2); %average over all fold
-plot(time(window_size+1:window_size:N),mean_accuracy);
-hold on;
-plot(time(window_size+1:window_size:N),mean_accuracy_chance,'k:');
-xlabel('time [s]')
-ylabel('accuracy [%]')
-ylim([10 50])
 
-nexttile;
-% plot the average testing kappa value as a function of time
-% print kappa value
-mean_kappa=mean(kappa,2); %average over all fold
-mean_kappa_chance=mean(kappa_chance,2); %average over all fold
-plot(time(window_size+1:window_size:N),mean_kappa);
-hold on;
-plot(time(window_size+1:window_size:N),mean_kappa_chance,'k:');
-xlabel('time [s]')
-ylabel('cohen`s kappa')
-ylim([0 1])
-
+print_measures(N,fs,window_size,accuracy,accuracy_chance,kappa,kappa_chance);

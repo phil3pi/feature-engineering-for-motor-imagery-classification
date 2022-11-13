@@ -1,6 +1,14 @@
 function [t] = print_measures(data,window_size,accuracy,accuracy_chance,kappa,kappa_chance)
 %PRINT_MEASURES Summary of this function goes here
 %   Detailed explanation goes here
+arguments
+    data Dataset
+    window_size {mustBeNumeric}
+    accuracy
+    accuracy_chance
+    kappa
+    kappa_chance
+end
 time=((0:data.N-1)/data.fs)-2; %in seconds; cue onset starts 2 seconds after the trial start. Cue onset is indicate with 0s
 %
 % Below is only plotting stuff

@@ -34,6 +34,8 @@ for kf=1:kfolds
     train_indexes=find(cv_indixes~=kf);
     parfor n=1:length(nn)
         disp([kf n])
+        % TODO: Reduce overhead of parfor. Currently for each thread the 
+        % complete eeg dataset needs to be copied
         train_data=data.eeg(:,nn(n)-window_size:nn(n),train_indexes);
         %train_data=psd_extractor(train_data,fs);
         %s_features_train=statistic_extractor(train_data);

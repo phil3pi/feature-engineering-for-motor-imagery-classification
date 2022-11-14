@@ -26,7 +26,7 @@ hold on;
 plot(time(window_size+1:window_size:data.N),mean_accuracy_chance,'k:');
 xlabel('time [s]')
 ylabel('accuracy [%]')
-ylim([10 50])
+ylim([10 100])
 
 nexttile;
 % plot the average testing kappa value as a function of time

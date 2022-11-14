@@ -9,16 +9,17 @@ pxx_length=inline_if(mod(nfft,2)==0,(nfft/2+1),(nfft+1)/2);
 % TODO: check different windowing methods
 % window=hamming(nfft);
 % window=rectwin(nfft);
-psd=nan(channels,7,trials);
+statistic_feature_size=1;
+psd=nan(channels*statistic_feature_size,size(bands,1),trials);
 for trial=1:trials
         x=squeeze(eeg(:,:,trial))';
         [pxx,f]=pwelch(x,[],[],[],fs);
         for j=1:size(bands,1)
             [mm,ii1]=min(abs(f-bands(j,1)));
             [mm,ii2]=min(abs(f-bands(j,2)));
-                    psd(:,j,trial)=mean(pxx(ii1:ii2,:));
+                    %psd(:,j,trial)=mean(pxx(ii1:ii2,:));
+                    psd(:,j,trial)=statistic_extractor_2d(pxx(ii1:ii2,:));
         end
-
 end
 
 

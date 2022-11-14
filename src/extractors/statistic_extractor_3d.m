@@ -1,4 +1,4 @@
-function [statistic_features] = statistic_extractor(data)
+function [statistic_features] = statistic_extractor_3d(data)
 % Extracts statistic features of dimension[channels x data-points x trials]
 %   The statistics are created for the data-points of each channel and
 %   trial. Following statistic features are created: min, max, mean,

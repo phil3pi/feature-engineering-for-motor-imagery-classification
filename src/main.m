@@ -8,7 +8,7 @@ addpath('tests/');
 addpath('data/');
 
 % TODO: take care for out of memory exception
-setup_multithreading(8);
+setup_multithreading(12);
 
 data=Dataset(1);
 data.remove_artifacts();
@@ -20,7 +20,7 @@ rng('default')
 cv_indixes = crossvalind('kfold',data.laball,kfolds);
 
 % number of samples
-window_size=10;
+window_size=100;
 
 %Train-test using sLDA and cross-validation
 
@@ -47,24 +47,19 @@ for kf=1:kfolds
         y_train_nn(n,:)=data.laball(train_indexes);
         y_test_nn(n,:)=data.laball(test_indexes);
     end
+    fs=data.fs;
 
     parfor n=1:length(nn)
         disp([kf n])
         
         train_data=squeeze(train_data_nn(n,:,:,:));
-        %train_data=psd_extractor(train_data,fs);
-        %s_features_train=statistic_extractor(train_data);
-        %train_data=horzcat(train_data, s_features_train);
-        %train_data=s_features_train;
+        train_data=psd_extractor(train_data,fs);
         x_train=permute(train_data,[3 1 2]); %Take win time points before the current time point up till the current time point (it's causal)
         x_train=x_train(:,:); % x_train is of dimension [number of training trials x number of features]
         y_train=y_train_nn(n,:);
 
         test_data=squeeze(test_data_nn(n,:,:,:));
-        %test_data=psd_extractor(test_data,fs);
-        %s_features_test=statistic_extractor(test_data);
-        %test_data=horzcat(test_data, s_features_test);
-        %test_data=s_features_test;
+        test_data=psd_extractor(test_data,fs);
         x_test=permute(test_data,[3 1 2]);
         x_test=x_test(:,:); % x_test is of dimension [number of testing trials x number of features]
         y_test=y_test_nn(n,:);

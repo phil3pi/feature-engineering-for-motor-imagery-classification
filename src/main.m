@@ -106,15 +106,9 @@ for kf=1:kfolds
         [accuracy_chance(n,kf),kappa_chance(n,kf)] = stats_of_measure(c_matrix); %Estimate accuracy  
     end
 end
-
-print_measures(data,window_size,accuracy,accuracy_chance,kappa,kappa_chance);
-
 roc_X=sum(squeeze(sum(roc_X_nn,1)),2)./roc_counter;
 roc_Y=sum(squeeze(sum(roc_Y_nn,1)),2)./roc_counter;
 roc_AUC=100*(sum(squeeze(sum(roc_AUC_nn,1)))./roc_counter);
-figure;
-plot(roc_X,roc_Y)
-xlabel('False positive rate') 
-ylabel('True positive rate')
-title('ROC for Classification by LDA')
-legend(sprintf('AUC: %0.2f%%',roc_AUC),'Location','southeast')
+
+%roc_X,roc_Y,roc_AUC
+print_measures(data,window_size,accuracy,accuracy_chance,kappa,kappa_chance);

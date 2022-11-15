@@ -39,4 +39,5 @@ plot(time(window_size+1:window_size:data.N),mean_kappa_chance,'k:');
 xlabel('time [s]')
 ylabel('cohen`s kappa')
 ylim([0 1])
+hold off;
 end

@@ -7,18 +7,15 @@ addpath('utils/');
 addpath('tests/');
 addpath('data/');
 
-% TODO: take care for out of memory exception
 setup_multithreading(12);
 
 data=Dataset(1);
-data.remove_artifacts();
+data.removeArtifacts();
 
-% important set predefined random state in order to compare results
 kfolds=10;
-rng('default')
+rng('default') % set predefined random state for making results comparable
 cv_indixes = crossvalind('kfold',data.laball,kfolds);
 
-% number of samples
 window_size=100;
 
 % performance measures

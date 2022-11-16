@@ -1,6 +1,6 @@
 classdef Dataset < handle
-    %DATASET Summary of this class goes here
-    %   Detailed explanation goes here
+    %DATASET Base class of the eeg data
+    %   Loads data from the original dataset, remove artifacts and outliers
     
     properties
         patient_id {mustBeNumeric};
@@ -29,16 +29,16 @@ classdef Dataset < handle
             obj.laball = data.laball;
         end
 
-        function remove_artifacts(obj)
-            % Remove artifactual trials
+        function removeArtifacts(obj)
+            %REMOVEARTIFACTS Remove artifactual trials
             obj.artifacts=find(obj.artifactsall==1);
             obj.eeg(:,:,obj.artifacts)=[];
             obj.laball(obj.artifacts)=[];
             [obj.channels,obj.N,obj.trials]=size(obj.eeg);
         end
         
-        function remove_outliers(obj)
-
+        function removeOutliers(obj)
+            %REMOVEOUTLIERS Remove outliers
             % TODO: implement this one
 
             %METHOD1 Summary of this method goes here

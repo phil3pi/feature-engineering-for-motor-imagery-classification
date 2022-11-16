@@ -29,10 +29,10 @@ kappa=nan(length(nn),kfolds);
 kappa_chance=nan(length(nn),kfolds);
 
 % ROC curve variables
-roc_X_nn=zeros(length(nn),length(find(cv_indixes==1))+1,kfolds);
-roc_Y_nn=zeros(length(nn),length(find(cv_indixes==1))+1,kfolds);
-roc_AUC_nn=zeros(length(nn),1,kfolds);
-roc_counter=0;
+% roc_X_nn=zeros(length(nn),length(find(cv_indixes==1))+1,kfolds);
+% roc_Y_nn=zeros(length(nn),length(find(cv_indixes==1))+1,kfolds);
+% roc_AUC_nn=zeros(length(nn),1,kfolds);
+% roc_counter=0;
 
 for kf=1:kfolds
     test_indexes=find(cv_indixes==kf);
@@ -75,40 +75,40 @@ for kf=1:kfolds
         c_matrix=confusionmat(y_test,y_pred);
         [accuracy(n,kf),kappa(n,kf)] = stats_of_measure(c_matrix); % Estimate accuracy
 
-        % print roc curve
-        calculation_counter=0;
-        for label=1:4 % iterate of all classification labels
-            if isempty(find(y_pred==label, 1))
-                continue
-            end
-            if length(roc_X_nn(n,:,kf))-(length(y_pred))-1~=0
-                break
-            end
-            [X_temp,Y_temp,~,AUC_temp]=perfcurve(y_pred,scores(:,label),label);
-            %length_difference=length(roc_X_nn(n,:,kf))-length(X_temp);
-            roc_X_nn(n,:,kf)=roc_X_nn(n,:,kf)+permute(X_temp,[2,1]);
-            roc_Y_nn(n,:,kf)=roc_Y_nn(n,:,kf)+permute(Y_temp,[2,1]);
-            roc_AUC_nn(n,:,kf)=roc_AUC_nn(n,:,kf)+AUC_temp;
-            calculation_counter=calculation_counter+1;
-        end
-        if calculation_counter~=0
-            roc_X_nn(n,:,kf)=roc_X_nn(n,:,kf)./calculation_counter;
-            roc_Y_nn(n,:,kf)=roc_Y_nn(n,:,kf)./calculation_counter;
-            roc_AUC_nn(n,:,kf)=roc_AUC_nn(n,:,kf)./calculation_counter;
-            roc_counter=roc_counter+1;
-        end
-
         % Get chance level by permuting randomly the input matrix x_test
         permuted_inds=randsample(length(y_test),length(y_test));
         x_test_perm=x_test(permuted_inds,:);
         [y_pred] = lda_predict(model_lda,x_test_perm); %Test on testing data
         c_matrix=confusionmat(y_test,y_pred); %Compute confusion matrix
-        [accuracy_chance(n,kf),kappa_chance(n,kf)] = stats_of_measure(c_matrix); %Estimate accuracy  
+        [accuracy_chance(n,kf),kappa_chance(n,kf)] = stats_of_measure(c_matrix); %Estimate accuracy
+
+        % print roc curve
+%         calculation_counter=0;
+%         for label=1:4 % iterate of all classification labels
+%             if isempty(find(y_pred==label, 1))
+%                 continue
+%             end
+%             if length(roc_X_nn(n,:,kf))-(length(y_pred))-1~=0
+%                 break
+%             end
+%             [X_temp,Y_temp,~,AUC_temp]=perfcurve(y_pred,scores(:,label),label);
+%             %length_difference=length(roc_X_nn(n,:,kf))-length(X_temp);
+%             roc_X_nn(n,:,kf)=roc_X_nn(n,:,kf)+permute(X_temp,[2,1]);
+%             roc_Y_nn(n,:,kf)=roc_Y_nn(n,:,kf)+permute(Y_temp,[2,1]);
+%             roc_AUC_nn(n,:,kf)=roc_AUC_nn(n,:,kf)+AUC_temp;
+%             calculation_counter=calculation_counter+1;
+%         end
+%         if calculation_counter~=0
+%             roc_X_nn(n,:,kf)=roc_X_nn(n,:,kf)./calculation_counter;
+%             roc_Y_nn(n,:,kf)=roc_Y_nn(n,:,kf)./calculation_counter;
+%             roc_AUC_nn(n,:,kf)=roc_AUC_nn(n,:,kf)./calculation_counter;
+%             roc_counter=roc_counter+1;
+%         end
     end
 end
-roc_X=sum(squeeze(sum(roc_X_nn,1)),2)./roc_counter;
-roc_Y=sum(squeeze(sum(roc_Y_nn,1)),2)./roc_counter;
-roc_AUC=100*(sum(squeeze(sum(roc_AUC_nn,1)))./roc_counter);
-
-%roc_X,roc_Y,roc_AUC
+% roc_X=sum(squeeze(sum(roc_X_nn,1)),2)./roc_counter;
+% roc_Y=sum(squeeze(sum(roc_Y_nn,1)),2)./roc_counter;
+% roc_AUC=100*(sum(squeeze(sum(roc_AUC_nn,1)))./roc_counter);
+% print_measures(data,window_size,accuracy,accuracy_chance,kappa,kappa_chance,roc_X,roc_Y,roc_AUC);
 print_measures(data,window_size,accuracy,accuracy_chance,kappa,kappa_chance);
+

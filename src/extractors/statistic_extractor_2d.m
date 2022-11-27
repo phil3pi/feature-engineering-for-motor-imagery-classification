@@ -1,4 +1,4 @@
-function [statistic_features] = statistic_extractor_2d(data,selected_features)
+function [statistic_features] = statistic_extractor_2d(data,selected_features,fs)
     % Extracts statistic features of dimension[data-points x channels]
     %   The statistics are created for the data-points of each channel and
     %   trial. Following statistic features are created: min, max, mean,
@@ -16,18 +16,12 @@ function [statistic_features] = statistic_extractor_2d(data,selected_features)
     percentile=50;
     prctile_data=inline_if(any(strcmp(selected_features,"prctile")),prctile(data,percentile),[]);
     
-    % [channels,~,trials]=size(data);
-    % entropy_data=nan(channels,1,trials);
-    % for t=1:1:trials
-    %     for c=1:1:channels
-    %         % TODO: check if calculation is correct
-    %         % [~,lag]=phaseSpaceReconstruction(data(c,:,t),[]);
-    %         entropy_data(c,1,t)=approximateEntropy(data(c,:,t));
-    %     end
-    % end
+    entropy_data = inline_if(any(strcmp(selected_features,"entropy")),approximateEntropy(data(:)),[]);
+    spectral_entropy_data = inline_if(any(strcmp(selected_features, "spectral-entropy")),median(pentropy(data(:),fs)),[]);
     
     % TODO: add other wanted features here
     statistic_features=[min_data,max_data,mean_data,median_data,...
-        std_data,kurtosis_data,skewness_data,prctile_data];
+        std_data,kurtosis_data,skewness_data,prctile_data,entropy_data,...
+        spectral_entropy_data];
 end
 

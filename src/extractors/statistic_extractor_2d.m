@@ -3,23 +3,38 @@ function [statistic_features] = statistic_extractor_2d(data,selected_features,fs
     %   The statistics are created for the data-points of each channel and
     %   trial. Following statistic features are created: min, max, mean,
     %   median, standard-deviation, kurtosis, skewness, percentile, entropy
-    min_data=inline_if(any(strcmp(selected_features,"min")),min(data,[],1),[]);
-    max_data=inline_if(any(strcmp(selected_features,"max")),max(data,[],1),[]);
-    mean_data=inline_if(any(strcmp(selected_features,"mean")),mean(data),[]);
-    median_data=inline_if(any(strcmp(selected_features,"median")),median(data),[]);
-    % TODO: checkout different weighting schemes (0 is default)
-    weight_scheme=0;
-    std_data=inline_if(any(strcmp(selected_features,"std")),std(data,weight_scheme),[]);
-    kurtosis_data=inline_if(any(strcmp(selected_features,"kurtosis")),kurtosis(data),[]);
-    skewness_data=inline_if(any(strcmp(selected_features,"skewness")),skewness(data),[]);
-    
-    percentile=50;
-    prctile_data=inline_if(any(strcmp(selected_features,"prctile")),prctile(data,percentile),[]);
-    
-    entropy_data = inline_if(any(strcmp(selected_features,"entropy")),approximateEntropy(data(:)),[]);
-    spectral_entropy_data = inline_if(any(strcmp(selected_features, "spectral-entropy")),median(pentropy(data(:),fs)),[]);
-    
-    % TODO: add other wanted features here
+    [min_data,max_data,mean_data,median_data,...
+        std_data,kurtosis_data,skewness_data,prctile_data,entropy_data,...
+        spectral_entropy_data] = deal([]);
+    for i=1:length(selected_features)
+        if any(strcmp(selected_features,"min"))
+            min_data = min(data,[],1);
+        elseif any(strcmp(selected_features,"max"))
+            max_data = max(data,[],1);
+        elseif any(strcmp(selected_features,"mean"))
+            mean_data = mean(data);
+        elseif any(strcmp(selected_features,"median"))
+            median_data = median(data);
+        elseif any(strcmp(selected_features,"std"))
+            % TODO: optimize parameter
+            weight_scheme=0;
+            std_data = std(data,weight_scheme);
+        elseif any(strcmp(selected_features,"kurtosis"))
+            kurtosis_data = kurtosis(data);
+        elseif any(strcmp(selected_features,"skewness"))
+            skewness_data = skewness(data);
+        elseif any(strcmp(selected_features,"prctile"))
+            % TODO: optimize parameter
+            percentile=50;
+            prctile_data = prctile(data,percentile);
+        elseif any(strcmp(selected_features,"entropy"))
+            entropy_data = approximateEntropy(data(:));
+        elseif any(strcmp(selected_features, "spectral-entropy"))
+            % TODO: think about the median of entropy values ...
+            spectral_entropy_data = median(pentropy(data(:),fs));
+        end
+        selected_features(i) = nan;
+    end
     statistic_features=[min_data,max_data,mean_data,median_data,...
         std_data,kurtosis_data,skewness_data,prctile_data,entropy_data,...
         spectral_entropy_data];

@@ -50,12 +50,16 @@ for kf=1:kfolds
         
         train_data=squeeze(train_data_nn(n,:,:,:));
         train_data=psd_extractor(train_data,fs);
+        %train_data=wavelet_entropy_extractor(train_data,6);
+        %train_data=wavelet_extractor(train_data);
         x_train=permute(train_data,[3 1 2]); %Take win time points before the current time point up till the current time point (it's causal)
         x_train=x_train(:,:); % x_train is of dimension [number of training trials x number of features]
         y_train=y_train_nn(n,:);
 
         test_data=squeeze(test_data_nn(n,:,:,:));
         test_data=psd_extractor(test_data,fs);
+        %test_data=wavelet_entropy_extractor(test_data,6);
+        %test_data=wavelet_extractor(test_data);
         x_test=permute(test_data,[3 1 2]);
         x_test=x_test(:,:); % x_test is of dimension [number of testing trials x number of features]
         y_test=y_test_nn(n,:);

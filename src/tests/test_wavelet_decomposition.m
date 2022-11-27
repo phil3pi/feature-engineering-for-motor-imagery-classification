@@ -15,6 +15,9 @@ figure;
 w=wt;
 plot(f,w);
 
+%% discrete wavelet transformation
+[cA,cD]=dwt(x,'db2');
+
 %% wavelet decomposition with wavedec
 time=((0:N-1)/fs)-2;
 figure
@@ -70,28 +73,28 @@ subplot(2,1,2);
 plot(f,P1);
 
 %% cwt filterbank
-frq1 = 32;
-amp1 = 1;
-frq2 = 64;
-amp2 = 2;
-
-Fs = 1e3;
-t = 0:1/Fs:1;
-x = amp1*sin(2*pi*frq1*t).*(t>=0.1 & t<0.3)+... 
-    amp2*sin(2*pi*frq2*t).*(t>0.6 & t<0.9);
-
-figure(1);
-subplot(3,1,1);
-plot(t,x)
-grid on
-xlabel("Time (sec)")
-ylabel("Amplitude")
-title("Signal")
-subplot(3,1,2);
-fb = cwtfilterbank(SignalLength=numel(x),SamplingFrequency=Fs,...
-    FrequencyLimits=[20 100]);
-freqz(fb)
-subplot(3,1,3);
-datacursormode on
-cwt(x,FilterBank=fb)
+% frq1 = 32;
+% amp1 = 1;
+% frq2 = 64;
+% amp2 = 2;
+% 
+% Fs = 1e3;
+% t = 0:1/Fs:1;
+% x = amp1*sin(2*pi*frq1*t).*(t>=0.1 & t<0.3)+... 
+%     amp2*sin(2*pi*frq2*t).*(t>0.6 & t<0.9);
+% 
+% figure(1);
+% subplot(3,1,1);
+% plot(t,x)
+% grid on
+% xlabel("Time (sec)")
+% ylabel("Amplitude")
+% title("Signal")
+% subplot(3,1,2);
+% fb = cwtfilterbank(SignalLength=numel(x),SamplingFrequency=Fs,...
+%     FrequencyLimits=[20 100]);
+% freqz(fb)
+% subplot(3,1,3);
+% datacursormode on
+% cwt(x,FilterBank=fb)
 

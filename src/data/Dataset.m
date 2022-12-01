@@ -9,7 +9,7 @@ classdef Dataset < handle
         channels {mustBeNumeric};
         N {mustBeNumeric};
         trials {mustBeNumeric};
-        fs = 250; % sampling rate
+        fs {mustBeNumeric} = 250; % sampling rate
     end
     properties (Access = private)
         artifactsall;
@@ -35,7 +35,8 @@ classdef Dataset < handle
             [obj.channels,obj.N,obj.trials]=size(obj.eeg);
         end
 
-        function resampleData(obj,desired_fs)
+        function resample(obj,desired_fs)
+            %RESAMPLE Resamples with the given resampling frequency
             timeseries=obj.eeg(1,:,1);
             [p,q] = rat(desired_fs / obj.fs);
             new_n = 6*desired_fs;

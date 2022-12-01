@@ -3,5 +3,5 @@ close all;clear all;
 
 data=Dataset(1);
 data.removeArtifacts();
-data.resampleData(50);
+data.resample(50);
 t = data.eeg;

@@ -9,8 +9,6 @@ classdef Dataset < handle
         channels {mustBeNumeric};
         N {mustBeNumeric};
         trials {mustBeNumeric};
-    end
-    properties (Constant)
         fs = 250; % sampling rate
     end
     properties (Access = private)
@@ -35,6 +33,22 @@ classdef Dataset < handle
             obj.eeg(:,:,obj.artifacts)=[];
             obj.laball(obj.artifacts)=[];
             [obj.channels,obj.N,obj.trials]=size(obj.eeg);
+        end
+
+        function resampleData(obj,desired_fs)
+            timeseries=obj.eeg(1,:,1);
+            [p,q] = rat(desired_fs / obj.fs);
+            new_n = 6*desired_fs;
+            resampled_eeg = nan(obj.channels,new_n,obj.trials);
+
+            for trial=1:obj.trials
+                for channel=1:obj.channels
+                    resampled_eeg(channel,:,trial) = resample(timeseries,p,q);
+                end
+            end
+            obj.N = new_n;
+            obj.fs = desired_fs;
+            obj.eeg = resampled_eeg;
         end
         
         function removeOutliers(obj)

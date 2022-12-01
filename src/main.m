@@ -30,23 +30,23 @@ kappa_chance=nan(length(nn),kfolds);
 % for w_perm=permute(w_permutations,[2 1])
 %     disp(w_perm);
     for kf=1:kfolds
-        test_indexes=find(cv_indixes==kf);
-        train_indexes=find(cv_indixes~=kf);
+        test_indices=find(cv_indixes==kf);
+        train_indices=find(cv_indixes~=kf);
         
         % Pre-allocate a buffered matrix of all window sizes. 
         % This reduces the memory overhead of parfor if the thread size 
         % continues to increase. Without pre-allocation each thread would need
         % to copy the complete eeg dataset
-        train_data_nn=nan(length(nn),data.channels,window_size+1,length(train_indexes));
-        test_data_nn=nan(length(nn),data.channels,window_size+1,length(test_indexes));
-        y_train_nn=nan(length(nn),length(train_indexes));
-        y_test_nn=nan(length(nn),length(test_indexes));
+        train_data_nn=nan(length(nn),data.channels,window_size+1,length(train_indices));
+        test_data_nn=nan(length(nn),data.channels,window_size+1,length(test_indices));
+        y_train_nn=nan(length(nn),length(train_indices));
+        y_test_nn=nan(length(nn),length(test_indices));
 %         w_perm_nn=strings([length(nn),length(w_perm')]);
         for n=1:length(nn)
-            train_data_nn(n,:,:,:)=data.eeg(:,nn(n)-window_size:nn(n),train_indexes);
-            test_data_nn(n,:,:,:)=data.eeg(:,nn(n)-window_size:nn(n),test_indexes);
-            y_train_nn(n,:)=data.laball(train_indexes);
-            y_test_nn(n,:)=data.laball(test_indexes);
+            train_data_nn(n,:,:,:)=data.eeg(:,nn(n)-window_size:nn(n),train_indices);
+            test_data_nn(n,:,:,:)=data.eeg(:,nn(n)-window_size:nn(n),test_indices);
+            y_train_nn(n,:)=data.laball(train_indices);
+            y_test_nn(n,:)=data.laball(test_indices);
 %             w_perm_nn(n,:)=w_perm';
         end
         fs=data.fs;
@@ -54,18 +54,18 @@ kappa_chance=nan(length(nn),kfolds);
         parfor n=1:length(nn)
             disp([kf n])
             train_data=squeeze(train_data_nn(n,:,:,:));
-            %train_data=psd_extractor(train_data,fs);
+            train_data=psd_extractor(train_data,fs);
             %train_data=wavelet_entropy_extractor(train_data,w_perm_nn(n,:));
-            train_data=wavelet_variance_extractor(train_data);
+            %train_data=wavelet_variance_extractor(train_data);
             %train_data=wavelet_extractor(train_data);
             x_train=permute(train_data,[3 1 2]); %Take win time points before the current time point up till the current time point (it's causal)
             x_train=x_train(:,:); % x_train is of dimension [number of training trials x number of features]
             y_train=y_train_nn(n,:);
     
             test_data=squeeze(test_data_nn(n,:,:,:));
-            %test_data=psd_extractor(test_data,fs);
+            test_data=psd_extractor(test_data,fs);
             %test_data=wavelet_entropy_extractor(test_data,w_perm_nn(n,:));
-            test_data=wavelet_variance_extractor(test_data);
+            %test_data=wavelet_variance_extractor(test_data);
             %test_data=wavelet_extractor(test_data);
             x_test=permute(test_data,[3 1 2]);
             x_test=x_test(:,:); % x_test is of dimension [number of testing trials x number of features]
@@ -86,5 +86,6 @@ kappa_chance=nan(length(nn),kfolds);
         end
     end
     %filename=sprintf('%s-%s-lvl-%s.pdf',w_perm(1),w_perm(2),w_perm(3));
-    print_measures(data,window_size,accuracy,accuracy_chance,kappa,kappa_chance,"save.pdf");
+    tile=print_measures(data,window_size,accuracy,accuracy_chance,kappa,kappa_chance);
+    %exportgraphics(tile,"save.pdf");
 %end

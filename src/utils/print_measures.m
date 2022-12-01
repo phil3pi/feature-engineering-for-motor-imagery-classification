@@ -1,4 +1,4 @@
-function [t] = print_measures(data,window_size,accuracy,accuracy_chance,kappa,kappa_chance,filename)
+function [t] = print_measures(data,window_size,accuracy,accuracy_chance,kappa,kappa_chance)
     %PRINT_MEASURES Summary of this function goes here
     %   Detailed explanation goes here
     roc_enabled=true;
@@ -36,5 +36,4 @@ function [t] = print_measures(data,window_size,accuracy,accuracy_chance,kappa,ka
     ylabel('cohen`s kappa')
     ylim([0 1])
     hold off;
-    exportgraphics(t,filename);
 end

@@ -52,23 +52,23 @@ classdef Dataset < handle
             obj.eeg = resampled_eeg;
         end
 
-        function removeOutliers(obj)
-            %REMOVEOUTLIERS Remove outliers
-            % TODO: implement this one
-
-            %METHOD1 Summary of this method goes here
-            %   Detailed explanation goes here
-            %             outliers=isoutlier(obj.eeg(1,:,:),"quartiles",2);
-            %             outlier_indexes=find(outliers==1);
-            %             number_of_outliers=length(outlier_indexes);
-            %             fprintf('Number of outliers detected: %d.\n', number_of_outliers);
-            %
-            %             eeg_preprocessed=nan(obj.channels,obj.N,obj.trials);
-            %             disp("Preprocessing channel: ")
-            %             for c=1:obj.channels
-            %                 fprintf('%d, ',c);
-            %                 eeg_preprocessed(c,:,:)=filloutliers(obj.eeg(c,:,:),"linear","quartiles");
-            %             end
+        function removeOutliers(obj,find_method,fill_method)
+            %REMOVEOUTLIERS Detect outliers and interpolate them
+            eeg_preprocessed = nan(obj.channels,obj.N,obj.trials);
+            number_of_outliers = 0;
+            for channel=1:obj.channels
+                outliers = isoutlier(obj.eeg(channel,:,:),find_method);
+                outlier_indexes = find(outliers==1);
+                number_of_outliers = length(outlier_indexes);
+                eeg_preprocessed(channel,:,:) = filloutliers(obj.eeg(channel,:,:),fill_method,find_method);
+                %figure(1);
+                %plot(1:1500, obj.eeg(channel,:,1));
+                %hold on;
+                %plot(1:1500, eeg_preprocessed(channel,:,1));
+                %hold off;
+            end
+            fprintf('%d outliers detected and interpolated.\n',number_of_outliers);
+            obj.eeg = eeg_preprocessed;
         end
     end
 end

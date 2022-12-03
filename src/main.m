@@ -11,6 +11,7 @@ setup_multithreading(10);
 
 data=Dataset(1);
 data.removeArtifacts();
+%data.resample(50);
 
 kfolds=10;
 rng('default') % set predefined random state for making results comparable

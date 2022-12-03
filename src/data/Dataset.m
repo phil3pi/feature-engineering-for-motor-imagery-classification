@@ -37,13 +37,13 @@ classdef Dataset < handle
 
         function resample(obj,desired_fs)
             %RESAMPLE Resamples with the given resampling frequency
-            timeseries=obj.eeg(1,:,1);
             [p,q] = rat(desired_fs / obj.fs);
             new_n = 6*desired_fs;
             resampled_eeg = nan(obj.channels,new_n,obj.trials);
 
             for trial=1:obj.trials
                 for channel=1:obj.channels
+                    timeseries=obj.eeg(channel,:,trial);
                     resampled_eeg(channel,:,trial) = resample(timeseries,p,q);
                 end
             end

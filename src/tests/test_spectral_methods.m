@@ -29,7 +29,7 @@ f=fs*(0:(N/2))/N;
 P2 = abs(y/N);
 P1 = P2(1:N/2+1);
 P1(2:end-1) = 2*P1(2:end-1);
-plot(f,P1) 
+plot(f,P1)
 title('FFT of signal data')
 xlabel('Hz')
 ylabel('amplitude [µV]')

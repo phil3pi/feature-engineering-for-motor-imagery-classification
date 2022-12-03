@@ -17,7 +17,7 @@ title('Spectral Entropy of White Noise Signal Vector')
 xlabel('Time (mins)')
 ylabel('Spectral Entropy')
 
-%% estimates the approximate entropy of the uniformly sampled time-domain signal 
+%% estimates the approximate entropy of the uniformly sampled time-domain signal
 % checkout function docs:
 % https://ch.mathworks.com/help/predmaint/ref/approximateentropy.html
 approxEnt=approximateEntropy(x);

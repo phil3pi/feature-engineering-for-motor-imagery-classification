@@ -8,7 +8,7 @@ load(sprintf('../dataset/Training Data/DATAall_cleaneog_A0%dT_Fs250',patient_id)
 
 x=eeg(1,:,1);
 fs=250;               %sampling rate
-T = 1/fs;             % Sampling period   
+T = 1/fs;             % Sampling period
 
 figure;
 [wt,f]=cwt(x,'bump',fs);
@@ -60,7 +60,7 @@ f = fs*(0:(L/2))/L;
 figure;
 subplot(2,1,1);
 plot(f,P1);
-                      
+
 L = 1500;             % Length of signal
 t = (0:L-1)*T;        % Time vector
 
@@ -77,12 +77,12 @@ plot(f,P1);
 % amp1 = 1;
 % frq2 = 64;
 % amp2 = 2;
-% 
+%
 % Fs = 1e3;
 % t = 0:1/Fs:1;
-% x = amp1*sin(2*pi*frq1*t).*(t>=0.1 & t<0.3)+... 
+% x = amp1*sin(2*pi*frq1*t).*(t>=0.1 & t<0.3)+...
 %     amp2*sin(2*pi*frq2*t).*(t>0.6 & t<0.9);
-% 
+%
 % figure(1);
 % subplot(3,1,1);
 % plot(t,x)

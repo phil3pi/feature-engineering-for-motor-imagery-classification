@@ -1,12 +1,12 @@
 classdef WaveletEntropyParameters
     %WAVELETENTROPYPARAMETERS contains wavelet entropy parameters
-    
+
     properties (Constant)
         entropy_type = ["Shannon" "Renyi" "Tsallis"]
-        transform_type = ["modwt" "dwt" "dwpt" "modwpt"] 
-        level = ["4" "5" "6"] 
+        transform_type = ["modwt" "dwt" "dwpt" "modwpt"]
+        level = ["4" "5" "6"]
     end
-    
+
     methods
         function obj = WaveletEntropyParameters()
             %WAVELETENTROPYPARAMETERS Construct an instance of this class

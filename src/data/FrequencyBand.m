@@ -1,6 +1,6 @@
 classdef FrequencyBand < handle
     %FREQUENCYBAND Provides important information about the frequency band
-    
+
     properties
         name string
         min {mustBeNumeric}
@@ -16,7 +16,7 @@ classdef FrequencyBand < handle
             obj.max = max;
         end
     end
-    
+
     methods (Static)
         function allBands = getAllBands()
             %GETFREQUENCYBANDS Returns all important frequency bands for
@@ -32,12 +32,12 @@ classdef FrequencyBand < handle
         end
 
         function selectedBands = getSpecificBands(bandNames)
-            %GETSPECIFICBANDS Returns the frequency band objects selected 
+            %GETSPECIFICBANDS Returns the frequency band objects selected
             % by the function argument
             allBands=FrequencyBand.getAllBands;
             selectedBands=FrequencyBand.empty(0,length(bandNames));
             for i=1:length(bandNames)
-                 selectedBands(i)=findobj(allBands,'name',bandNames(i));
+                selectedBands(i)=findobj(allBands,'name',bandNames(i));
             end
         end
     end

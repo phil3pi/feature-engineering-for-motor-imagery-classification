@@ -1,7 +1,7 @@
 classdef Dataset < handle
     %DATASET Base class of the eeg data
     %   Loads data from the original dataset, remove artifacts and outliers
-    
+
     properties
         patient_id {mustBeNumeric};
         eeg;
@@ -15,7 +15,7 @@ classdef Dataset < handle
         artifactsall;
         artifacts;
     end
-    
+
     methods
         function obj = Dataset(patient_id)
             %DATASET Construct an instance of this class
@@ -51,24 +51,24 @@ classdef Dataset < handle
             obj.fs = desired_fs;
             obj.eeg = resampled_eeg;
         end
-        
+
         function removeOutliers(obj)
             %REMOVEOUTLIERS Remove outliers
             % TODO: implement this one
 
             %METHOD1 Summary of this method goes here
             %   Detailed explanation goes here
-%             outliers=isoutlier(obj.eeg(1,:,:),"quartiles",2);
-%             outlier_indexes=find(outliers==1);
-%             number_of_outliers=length(outlier_indexes);
-%             fprintf('Number of outliers detected: %d.\n', number_of_outliers);
-%             
-%             eeg_preprocessed=nan(obj.channels,obj.N,obj.trials);
-%             disp("Preprocessing channel: ")
-%             for c=1:obj.channels
-%                 fprintf('%d, ',c);
-%                 eeg_preprocessed(c,:,:)=filloutliers(obj.eeg(c,:,:),"linear","quartiles");
-%             end
+            %             outliers=isoutlier(obj.eeg(1,:,:),"quartiles",2);
+            %             outlier_indexes=find(outliers==1);
+            %             number_of_outliers=length(outlier_indexes);
+            %             fprintf('Number of outliers detected: %d.\n', number_of_outliers);
+            %
+            %             eeg_preprocessed=nan(obj.channels,obj.N,obj.trials);
+            %             disp("Preprocessing channel: ")
+            %             for c=1:obj.channels
+            %                 fprintf('%d, ',c);
+            %                 eeg_preprocessed(c,:,:)=filloutliers(obj.eeg(c,:,:),"linear","quartiles");
+            %             end
         end
     end
 end

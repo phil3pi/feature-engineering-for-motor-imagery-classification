@@ -12,13 +12,13 @@ setup_multithreading(10);
 data=Dataset(1);
 data.removeArtifacts();
 %data.removeOutliers("quartiles","spline");
-data.resample(50);
+%data.resample(50);
 
 kfolds=10;
 rng('default') % set predefined random state for making results comparable
 cv_indixes = crossvalind('kfold',data.laball,kfolds);
 
-window_size=20;
+window_size=100;
 
 % performance measures
 nn=window_size+1:window_size:data.N;
@@ -58,8 +58,9 @@ for kf=1:kfolds
         train_data=squeeze(train_data_nn(n,:,:,:));
         %train_data=psd_extractor(train_data,fs);
         %train_data=wavelet_entropy_extractor(train_data,w_perm_nn(n,:));
-        train_data=wavelet_variance_extractor(train_data);
+        %train_data=wavelet_variance_extractor(train_data);
         %train_data=wavelet_extractor(train_data);
+        train_data=lyapunov_exponent_extractor(train_data,fs);
         x_train=permute(train_data,[3 1 2]); %Take win time points before the current time point up till the current time point (it's causal)
         x_train=x_train(:,:); % x_train is of dimension [number of training trials x number of features]
         y_train=y_train_nn(n,:);
@@ -67,8 +68,9 @@ for kf=1:kfolds
         test_data=squeeze(test_data_nn(n,:,:,:));
         %test_data=psd_extractor(test_data,fs);
         %test_data=wavelet_entropy_extractor(test_data,w_perm_nn(n,:));
-        test_data=wavelet_variance_extractor(test_data);
+        %test_data=wavelet_variance_extractor(test_data);
         %test_data=wavelet_extractor(test_data);
+        test_data=lyapunov_exponent_extractor(test_data,fs);
         x_test=permute(test_data,[3 1 2]);
         x_test=x_test(:,:); % x_test is of dimension [number of testing trials x number of features]
         y_test=y_test_nn(n,:);

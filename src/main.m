@@ -31,6 +31,7 @@ kappa_chance=nan(length(nn),kfolds);
 % w_permutations = w_param.getPermutations;
 % for w_perm=permute(w_permutations,[2 1])
 %     disp(w_perm);
+tStart = tic;
 for kf=1:kfolds
     test_indices=find(cv_indixes==kf);
     train_indices=find(cv_indixes~=kf);
@@ -56,23 +57,25 @@ for kf=1:kfolds
     parfor n=1:length(nn)
         disp([kf n])
         train_data=squeeze(train_data_nn(n,:,:,:));
-        %train_data=psd_extractor(train_data,fs);
-        %train_data=wavelet_entropy_extractor(train_data,w_perm_nn(n,:));
-        %train_data=wavelet_variance_extractor(train_data);
-        %train_data=wavelet_extractor(train_data);
-        train_data=ar_extractor(train_data,"aryule",4,false);
-        %train_data=lyapunov_exponent_extractor(train_data,fs);
+        %train_data=Extractor.psd(train_data,fs,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["std"]);
+        %train_data=Extractor.waveletEntropy(train_data,w_perm_nn(n,:));
+        %train_data=Extractor.waveletEntropy(train_data,["Shannon","modwt","4"]);
+        %train_data=Extractor.waveletVariance(train_data);
+        %train_data=Extractor.wavelet(train_data);
+        train_data=Extractor.ar(train_data,"aryule",4,false);
+        %train_data=Extractor.lyapunovExponent(train_data,fs);
         x_train=permute(train_data,[3 1 2]); %Take win time points before the current time point up till the current time point (it's causal)
         x_train=x_train(:,:); % x_train is of dimension [number of training trials x number of features]
         y_train=y_train_nn(n,:);
 
         test_data=squeeze(test_data_nn(n,:,:,:));
-        %test_data=psd_extractor(test_data,fs);
-        %test_data=wavelet_entropy_extractor(test_data,w_perm_nn(n,:));
-        %test_data=wavelet_variance_extractor(test_data);
-        %test_data=wavelet_extractor(test_data);
-        test_data=ar_extractor(test_data,"aryule",4,false);
-        %test_data=lyapunov_exponent_extractor(test_data,fs);
+        %test_data=Extractor.psd(test_data,fs,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["std"]);
+        %test_data=Extractor.waveletEntropy(test_data,w_perm_nn(n,:));
+        %test_data=Extractor.waveletEntropy(test_data,["Shannon","modwt","4"]);
+        %test_data=Extractor.waveletVariance(test_data);
+        %test_data=Extractor.wavelet(test_data);
+        test_data=Extractor.ar(test_data,"aryule",4,false);
+        %test_data=Extractor.lyapunovExponent(test_data,fs);
         x_test=permute(test_data,[3 1 2]);
         x_test=x_test(:,:); % x_test is of dimension [number of testing trials x number of features]
         y_test=y_test_nn(n,:);
@@ -91,6 +94,8 @@ for kf=1:kfolds
         [accuracy_chance(n,kf),kappa_chance(n,kf)] = stats_of_measure(c_matrix); %Estimate accuracy
     end
 end
+tEnd = toc(tStart);
+fprintf('Elapsed time for training and testing model is %0.4f seconds.\n',tEnd);
 %filename=sprintf('%s-%s-lvl-%s.pdf',w_perm(1),w_perm(2),w_perm(3));
 tile=print_measures(data,window_size,accuracy,accuracy_chance,kappa,kappa_chance);
 %exportgraphics(tile,"save.pdf");

@@ -1,4 +1,4 @@
-classdef Extractor
+classdef FeatureExtractor
     %EXTRACTOR Contains several feature extractor methods
     %   Detailed explanation goes here
     methods(Static)

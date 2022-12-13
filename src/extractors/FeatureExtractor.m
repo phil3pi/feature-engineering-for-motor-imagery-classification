@@ -117,6 +117,36 @@ classdef FeatureExtractor
                 end
             end
         end
+
+        function ar_psd_features = arPsd(eeg,fs,method,order,selected_bands,statistic_features)
+            %ARPSD calculate the psd with autoregression model
+            % additionally statistic feature will be extracted of the
+            % estimated psd
+            bands=FrequencyBand.getSpecificBands(selected_bands);
+            [channels,~,trials]=size(eeg);
+            ar_psd_features=nan(channels*length(statistic_features),length(bands),trials);
+            for trial=1:trials
+                x=squeeze(eeg(:,:,trial))';
+                % TODO: experiment with non default parameters
+                switch method
+                    case "pcov"
+                        [pxx,f]=pcov(x,order,[],fs);
+                    case "pmcov"
+                        [pxx,f]=pmcov(x,order,[],fs);
+                    case "pburg"
+                        [pxx,f]=pburg(x,order,[],fs);
+                    case "pyulear"
+                        [pxx,f]=pyulear(x,order,[],fs);
+                    otherwise
+                        error("AR psd extractor only supports pcov, pmcov, pburg or pyulear");
+                end
+                for j=1:length(bands)
+                    [~,ii1]=min(abs(f-bands(j).min));
+                    [~,ii2]=min(abs(f-bands(j).max));
+                    ar_psd_features(:,j,trial)=statistic_extractor_2d(pxx(ii1:ii2,:),statistic_features,fs);
+                end
+            end
+        end
     end
 end
 

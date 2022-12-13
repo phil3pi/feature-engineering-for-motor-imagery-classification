@@ -118,6 +118,26 @@ classdef FeatureExtractor
             end
         end
 
+        function corr = waveletCorrelation(eeg)
+            [channels,~,trials] = size(eeg);
+            corr = nan(channels,channels-1,trials);
+
+            for trial=1:trials
+                for channel=1:channels
+                    current_signal_coeff = modwt(eeg(channel,:,trial),'db2');
+                    index = 1;
+                    for c=1:channels
+                        if c==channel
+                            continue
+                        end
+                        temp_coeff = modwt(eeg(c,:,trial),'db2');
+                        corr(channel,index,trial) = mean(modwtcorr(current_signal_coeff,temp_coeff,'db2'));
+                        index = index + 1;
+                    end
+                end
+            end
+        end
+
         function ar_psd_features = arPsd(eeg,fs,method,order,selected_bands,statistic_features)
             %ARPSD calculate the psd with autoregression model
             % additionally statistic feature will be extracted of the

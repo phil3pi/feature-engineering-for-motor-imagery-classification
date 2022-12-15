@@ -37,6 +37,17 @@ classdef FeatureExtractor
             end
         end
 
+        function statistics = statistic(eeg,fs,statistic_features)
+            % STATISTIC Extract statistic features of the raw eeg signal
+            [channels,~,trials]=size(eeg);
+            statistics=nan(channels,length(statistic_features),trials);
+            for trial=1:trials
+                for channel=1:channels
+                    statistics(channel,:,trial) = statistic_extractor_2d(eeg(channel,:,trial),statistic_features,fs);
+                end
+            end
+        end
+
         function psd = psd(eeg,fs,selected_bands,statistic_features)
             % PSD Calculate and returns the welch's power spectral density
             % estimate

@@ -60,7 +60,7 @@ classdef FeatureExtractor
                 for j=1:length(bands)
                     [~,ii1]=min(abs(f-bands(j).min));
                     [~,ii2]=min(abs(f-bands(j).max));
-                    psd(:,j,trial)=statistic_extractor_2d(pxx(ii1:ii2,:),statistic_features,fs);
+                    psd(:,j,trial)=statistic_extractor(pxx(ii1:ii2,:),statistic_features,fs,1);
                 end
             end
         end
@@ -173,7 +173,7 @@ classdef FeatureExtractor
                 for j=1:length(bands)
                     [~,ii1]=min(abs(f-bands(j).min));
                     [~,ii2]=min(abs(f-bands(j).max));
-                    ar_psd_features(:,j,trial)=statistic_extractor_2d(pxx(ii1:ii2,:),statistic_features,fs);
+                    ar_psd_features(:,j,trial)=statistic_extractor(pxx(ii1:ii2,:),statistic_features,fs,1);
                 end
             end
         end

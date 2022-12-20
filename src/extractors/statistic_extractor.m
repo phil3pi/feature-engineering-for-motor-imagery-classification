@@ -38,7 +38,7 @@ for i=1:length(selected_features)
         percentile = 50;
         prctile_data = prctile(data,percentile,dim);
     elseif any(strcmp(selected_features,"entropy"))
-        entropy_data = approximateEntropy(data(:),[],dim);
+        entropy_data = approximateEntropy(data,[],dim);
     elseif any(strcmp(selected_features, "spectral-entropy"))
         [~,channels] = size(data);
         spectral_entropy_data = nan(1,channels);

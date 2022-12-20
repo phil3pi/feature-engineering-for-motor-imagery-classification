@@ -42,9 +42,8 @@ classdef FeatureExtractor
             [channels,~,trials]=size(eeg);
             statistics=nan(channels,length(statistic_features),trials);
             for trial=1:trials
-                for channel=1:channels
-                    statistics(channel,:,trial) = statistic_extractor_2d(eeg(channel,:,trial),statistic_features,fs);
-                end
+                data = statistic_extractor(eeg(:,:,trial)',statistic_features,fs,1);
+                statistics(:,:,trial) = permute(data,[2,1]);
             end
         end
 

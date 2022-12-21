@@ -12,10 +12,6 @@ accuracy_chance=nan(length(nn),kfolds);
 kappa=nan(length(nn),kfolds);
 kappa_chance=nan(length(nn),kfolds);
 
-% w_param = WaveletEntropyParameters();
-% w_permutations = w_param.getPermutations;
-% for w_perm=permute(w_permutations,[2 1])
-%     disp(w_perm);
 tStart = tic;
 for kf=1:kfolds
     test_indices=find(cv_indixes==kf);
@@ -29,13 +25,11 @@ for kf=1:kfolds
     test_data_nn=nan(length(nn),data.channels,window_size+1,length(test_indices));
     y_train_nn=nan(length(nn),length(train_indices));
     y_test_nn=nan(length(nn),length(test_indices));
-    %         w_perm_nn=strings([length(nn),length(w_perm')]);
     for n=1:length(nn)
         train_data_nn(n,:,:,:)=data.eeg(:,nn(n)-window_size:nn(n),train_indices);
         test_data_nn(n,:,:,:)=data.eeg(:,nn(n)-window_size:nn(n),test_indices);
         y_train_nn(n,:)=data.laball(train_indices);
         y_test_nn(n,:)=data.laball(test_indices);
-        %             w_perm_nn(n,:)=w_perm';
     end
     fs=data.fs;
 
@@ -43,7 +37,6 @@ for kf=1:kfolds
         disp([kf n])
         train_data=squeeze(train_data_nn(n,:,:,:));
         %train_data=FeatureExtractor.psd(train_data,fs,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["std"]);
-        %train_data=FeatureExtractor.waveletEntropy(train_data,w_perm_nn(n,:));
         %train_data=FeatureExtractor.waveletEntropy(train_data,["Shannon","modwt","4"]);
         %train_data=FeatureExtractor.waveletVariance(train_data);
         %train_data=FeatureExtractor.wavelet(train_data);
@@ -58,7 +51,6 @@ for kf=1:kfolds
 
         test_data=squeeze(test_data_nn(n,:,:,:));
         %test_data=FeatureExtractor.psd(test_data,fs,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["std"]);
-        %test_data=FeatureExtractor.waveletEntropy(test_data,w_perm_nn(n,:));
         %test_data=FeatureExtractor.waveletEntropy(test_data,["Shannon","modwt","4"]);
         %test_data=FeatureExtractor.waveletVariance(test_data);
         %test_data=FeatureExtractor.wavelet(test_data);

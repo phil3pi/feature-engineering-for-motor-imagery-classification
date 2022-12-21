@@ -1,6 +1,7 @@
 % clear workspace, functionspace and figures
 close all;clear all;
 
+addpath('classifiers/');
 addpath('classifiers/lda');
 addpath('extractors/');
 addpath('extractors/parameters/')

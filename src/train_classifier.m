@@ -1,4 +1,4 @@
-function [accuracy,accuracy_chance,kappa,kappa_chance] = train_classifier(data,window_size)
+function [accuracy,accuracy_chance,kappa,kappa_chance] = train_classifier(data,window_size,method)
 %TRAIN_CLASSIFIER Summary of this function goes here
 %   Detailed explanation goes here
 kfolds=10;
@@ -36,29 +36,51 @@ for kf=1:kfolds
     parfor n=1:length(nn)
         disp([kf n])
         train_data=squeeze(train_data_nn(n,:,:,:));
-        %train_data=FeatureExtractor.psd(train_data,fs,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["std"]);
-        %train_data=FeatureExtractor.waveletEntropy(train_data,["Shannon","modwt","4"]);
-        %train_data=FeatureExtractor.waveletVariance(train_data);
-        %train_data=FeatureExtractor.wavelet(train_data);
-        %train_data=FeatureExtractor.ar(train_data,"aryule",4,false);
-        %train_data=FeatureExtractor.waveletCorrelation(train_data);
-        train_data=FeatureExtractor.statistic(train_data,fs,["slope"]);
-        %train_data=FeatureExtractor.arPsd(train_data,fs,"pburg",4,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["median"]);
-        %train_data=FeatureExtractor.lyapunovExponent(train_data,fs);
+        switch method
+            case "psd"
+                train_data=FeatureExtractor.psd(train_data,fs,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["std"]);
+            case "waveletEntropy"
+                train_data=FeatureExtractor.waveletEntropy(train_data,["Shannon","modwt","4"]);
+            case "waveletVariance"
+                train_data=FeatureExtractor.waveletVariance(train_data);
+            case "waveletCorrelation"
+                train_data=FeatureExtractor.waveletCorrelation(train_data);
+            case "statistic"
+                train_data=FeatureExtractor.statistic(train_data,fs,["slope"]);
+            case "ar"
+                train_data=FeatureExtractor.ar(train_data,"aryule",4,false);
+            case "arPsd"
+                train_data=FeatureExtractor.arPsd(train_data,fs,"pburg",4,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["median"]);
+            case "lyapunov"
+                train_data=FeatureExtractor.lyapunovExponent(train_data,fs);
+            otherwise
+                error("Invalid extraction method. Only support: psd, waveletEntropy, waveletCorrelation, statistic, ar, arPsd, lyapunov.");
+        end
         x_train=permute(train_data,[3 1 2]); %Take win time points before the current time point up till the current time point (it's causal)
         x_train=x_train(:,:); % x_train is of dimension [number of training trials x number of features]
         y_train=y_train_nn(n,:);
 
         test_data=squeeze(test_data_nn(n,:,:,:));
-        %test_data=FeatureExtractor.psd(test_data,fs,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["std"]);
-        %test_data=FeatureExtractor.waveletEntropy(test_data,["Shannon","modwt","4"]);
-        %test_data=FeatureExtractor.waveletVariance(test_data);
-        %test_data=FeatureExtractor.wavelet(test_data);
-        %test_data=FeatureExtractor.ar(test_data,"aryule",4,false);
-        %test_data=FeatureExtractor.waveletCorrelation(test_data);
-        test_data=FeatureExtractor.statistic(test_data,fs,["slope"]);
-        %test_data=FeatureExtractor.arPsd(test_data,fs,"pburg",4,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["median"]);
-        %test_data=FeatureExtractor.lyapunovExponent(test_data,fs);
+        switch method
+            case "psd"
+                test_data=FeatureExtractor.psd(test_data,fs,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["std"]);
+            case "waveletEntropy"
+                test_data=FeatureExtractor.waveletEntropy(test_data,["Shannon","modwt","4"]);
+            case "waveletVariance"
+                test_data=FeatureExtractor.waveletVariance(test_data);
+            case "waveletCorrelation"
+                test_data=FeatureExtractor.waveletCorrelation(test_data);
+            case "statistic"
+                test_data=FeatureExtractor.statistic(test_data,fs,["slope"]);
+            case "ar"
+                test_data=FeatureExtractor.ar(test_data,"aryule",4,false);
+            case "arPsd"
+                test_data=FeatureExtractor.arPsd(test_data,fs,"pburg",4,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["median"]);
+            case "lyapunov"
+                test_data=FeatureExtractor.lyapunovExponent(test_data,fs);
+            otherwise
+                error("Invalid extraction method. Only support: psd, waveletEntropy, waveletCorrelation, statistic, ar, arPsd, lyapunov.");
+        end
         x_test=permute(test_data,[3 1 2]);
         x_test=x_test(:,:); % x_test is of dimension [number of testing trials x number of features]
         y_test=y_test_nn(n,:);

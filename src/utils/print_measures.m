@@ -1,15 +1,11 @@
-function [t] = print_measures(N,fs,window_size,accuracy,accuracy_chance,kappa,kappa_chance)
+function [t] = print_measures(N,fs,window_size,accuracy,accuracy_chance,kappa,kappa_chance,filename)
 %PRINT_MEASURES Summary of this function goes here
 %   Detailed explanation goes here
-roc_enabled=true;
-if nargin < 9
-    roc_enabled=false;
-end
 time=((0:N-1)/fs)-2; %in seconds; cue onset starts 2 seconds after the trial start. Cue onset is indicate with 0s
 %
 % Below is only plotting stuff
 %
-t=tiledlayout(inline_if(roc_enabled,3,2),1);
+t=tiledlayout(2,1);
 t.TileSpacing='loose';
 title(t,'Performance measures of classification')
 nexttile;
@@ -36,4 +32,8 @@ xlabel('time [s]')
 ylabel('cohen`s kappa')
 ylim([0 1])
 hold off;
+
+if filename ~= ""
+    savefig(filename);
+end
 end

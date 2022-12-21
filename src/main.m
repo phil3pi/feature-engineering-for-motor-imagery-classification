@@ -3,6 +3,7 @@ close all;clear all;
 
 addpath('classifiers/lda');
 addpath('extractors/');
+addpath('extractors/parameters/')
 addpath('utils/');
 addpath('tests/');
 addpath('data/');
@@ -15,9 +16,11 @@ data.removeArtifacts();
 %data.resample(50);
 
 window_size = 100;
-[accuracy,accuracy_chance,kappa,kappa_chance]=train_classifier(data,window_size);
 
-%filename=sprintf('%s-%s-lvl-%s.pdf',w_perm(1),w_perm(2),w_perm(3));
-tile=print_measures(data.N,data.fs,window_size,accuracy,accuracy_chance,kappa,kappa_chance);
-%exportgraphics(tile,"save.pdf");
-%end
+methods = ["psd", "waveletEntropy", "waveletCorrelation", "statistic", "ar", "arPsd", "lyapunov"];
+for method=methods
+    [accuracy,accuracy_chance,kappa,kappa_chance]=train_classifier(data,window_size,method);
+
+    filename=sprintf('%s.fig',method);
+    print_measures(data.N,data.fs,window_size,accuracy,accuracy_chance,kappa,kappa_chance,filename);
+end

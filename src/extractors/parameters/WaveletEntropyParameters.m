@@ -1,4 +1,4 @@
-classdef WaveletEntropyParameters
+classdef WaveletEntropyParameters < ExtractorParameterInterface
     %WAVELETENTROPYPARAMETERS contains wavelet entropy parameters
 
     properties (Constant)
@@ -21,4 +21,3 @@ classdef WaveletEntropyParameters
         end
     end
 end
-

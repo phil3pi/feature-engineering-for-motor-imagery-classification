@@ -18,6 +18,6 @@ window_size = 100;
 [accuracy,accuracy_chance,kappa,kappa_chance]=train_classifier(data,window_size);
 
 %filename=sprintf('%s-%s-lvl-%s.pdf',w_perm(1),w_perm(2),w_perm(3));
-tile=print_measures(data,window_size,accuracy,accuracy_chance,kappa,kappa_chance);
+tile=print_measures(data.N,data.fs,window_size,accuracy,accuracy_chance,kappa,kappa_chance);
 %exportgraphics(tile,"save.pdf");
 %end

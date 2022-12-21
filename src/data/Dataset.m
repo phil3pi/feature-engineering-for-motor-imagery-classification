@@ -37,6 +37,10 @@ classdef Dataset < handle
 
         function resample(obj,desired_fs)
             %RESAMPLE Resamples with the given resampling frequency
+            if desired_fs == obj.fs
+                return;
+            end
+
             [p,q] = rat(desired_fs / obj.fs);
             new_n = 6*desired_fs;
             resampled_eeg = nan(obj.channels,new_n,obj.trials);

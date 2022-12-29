@@ -40,7 +40,7 @@ for kf=1:kfolds
             case "psd"
                 train_data=FeatureExtractor.psd(train_data,fs,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["std"]);
             case "waveletEntropy"
-                train_data=FeatureExtractor.waveletEntropy(train_data,["Shannon","modwt","4"]);
+                train_data=FeatureExtractor.waveletEntropy(train_data,WaveletEntropyParameters("Shannon","modwt",4));
             case "waveletVariance"
                 train_data=FeatureExtractor.waveletVariance(train_data);
             case "waveletCorrelation"
@@ -65,7 +65,7 @@ for kf=1:kfolds
             case "psd"
                 test_data=FeatureExtractor.psd(test_data,fs,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["std"]);
             case "waveletEntropy"
-                test_data=FeatureExtractor.waveletEntropy(test_data,["Shannon","modwt","4"]);
+                test_data=FeatureExtractor.waveletEntropy(test_data,WaveletEntropyParameters("Shannon","modwt",4));
             case "waveletVariance"
                 test_data=FeatureExtractor.waveletVariance(test_data);
             case "waveletCorrelation"

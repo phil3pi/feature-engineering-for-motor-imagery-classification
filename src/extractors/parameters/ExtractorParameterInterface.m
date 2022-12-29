@@ -3,6 +3,7 @@ classdef ExtractorParameterInterface
     %   Detailed explanation goes here
     methods (Abstract)
         getPermutations(obj);
+        toString(obj);
     end
 end
 

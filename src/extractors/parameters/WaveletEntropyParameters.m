@@ -8,9 +8,9 @@ classdef WaveletEntropyParameters < ExtractorParameterInterface
     end
 
     properties(Access = private,Constant)
-            entropy_types = ["Shannon" "Renyi" "Tsallis"];
-            transform_types = ["modwt" "dwt" "dwpt" "modwpt"];
-            levels = [4 5 6];
+            entropy_types string = ["Shannon" "Renyi" "Tsallis"];
+            transform_types string = ["modwt" "dwt" "dwpt" "modwpt"];
+            levels {mustBeNumeric} = [4 5 6];
     end
 
     methods
@@ -20,12 +20,13 @@ classdef WaveletEntropyParameters < ExtractorParameterInterface
             obj.entropy_type = entropy_type;
             obj.transform_type = transform_type;
             obj.level = level;
+            obj.name = "waveletEntropy";
         end
 
         function name = toString(obj)
             %TOSTRING Converts the object into a string based on its
             %parameters
-            name = sprintf("%s-%s-%s",obj.entropy_type,obj.transform_type,num2str(obj.level));
+            name = sprintf("%s-%s-%s-%s",obj.name,obj.entropy_type,obj.transform_type,num2str(obj.level));
         end
     end
 

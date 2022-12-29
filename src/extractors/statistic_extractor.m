@@ -1,10 +1,17 @@
-function [statistic_features] = statistic_extractor(data,selected_features,fs,dim)
+function [statistic_features] = statistic_extractor(data,statistic_parameters,fs,dim)
 % STATISTIC_EXTRACTOR Extracts statistic features of dimension
 % [data-points x channels] The statistics are created for the data-points 
 % of each channel and trial. Following statistic features are created: 
 % min, max, mean, median, standard-deviation, var, kurtosis, skewness, 
 % percentile, entropy, slope
 % output of data will be of format [number_of_selected_features x channels]
+arguments
+    data (:,:) double;
+    statistic_parameters StatisticParameters;
+    fs {mustBeNumeric};
+    dim {mustBeNumeric};
+end
+selected_features = statistic_parameters.statisticFeatures;
 [min_data,max_data,mean_data,median_data,...
     std_data,var_data,kurtosis_data,skewness_data,prctile_data,entropy_data,...
     spectral_entropy_data,slope_data] = deal([]);

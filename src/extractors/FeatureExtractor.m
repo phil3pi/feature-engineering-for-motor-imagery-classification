@@ -39,6 +39,11 @@ classdef FeatureExtractor
 
         function statistics = statistic(eeg,fs,statistic_features)
             % STATISTIC Extract statistic features of the raw eeg signal
+            arguments
+                eeg (:,:,:);
+                fs {mustBeNumeric};
+                statistic_features StatisticParameters;
+            end
             [channels,~,trials]=size(eeg);
             statistics=nan(channels,length(statistic_features),trials);
             for trial=1:trials

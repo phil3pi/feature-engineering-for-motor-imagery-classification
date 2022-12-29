@@ -4,7 +4,7 @@ classdef Dataset < handle
 
     properties
         patient_id {mustBeNumeric};
-        eeg;
+        eeg (:,:,:) double;
         laball;
         channels {mustBeNumeric};
         N {mustBeNumeric};

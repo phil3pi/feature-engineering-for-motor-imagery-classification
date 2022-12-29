@@ -1,15 +1,15 @@
-function [accuracy,accuracy_chance,kappa,kappa_chance] = train_classifier(data,window_size,method)
+function [accuracy,accuracy_chance,kappa,kappa_chance] = train_classifier(data,window_size,parameters)
 %TRAIN_CLASSIFIER Summary of this function goes here
 %   Detailed explanation goes here
 arguments
     data Dataset;
     window_size {mustBeNumeric};
-    method string;
+    parameters ExtractorParameterInterface;
 end
 kfolds=10;
 rng('default') % set predefined random state for making results comparable
 cv_indixes = crossvalind('kfold',data.laball,kfolds);
-
+method = parameters.name;
 % performance measures
 nn=window_size+1:window_size:data.N;
 accuracy=nan(length(nn),kfolds);
@@ -51,7 +51,7 @@ for kf=1:kfolds
             case "waveletCorrelation"
                 train_data=FeatureExtractor.waveletCorrelation(train_data);
             case "statistic"
-                train_data=FeatureExtractor.statistic(train_data,fs,StatisticParameters(["slope"]));
+                train_data=FeatureExtractor.statistic(train_data,fs,parameters);
             case "ar"
                 train_data=FeatureExtractor.ar(train_data,"aryule",4,false);
             case "arPsd"
@@ -76,7 +76,7 @@ for kf=1:kfolds
             case "waveletCorrelation"
                 test_data=FeatureExtractor.waveletCorrelation(test_data);
             case "statistic"
-                test_data=FeatureExtractor.statistic(test_data,fs,StatisticParameters(["slope"]));
+                test_data=FeatureExtractor.statistic(test_data,fs,parameters);
             case "ar"
                 test_data=FeatureExtractor.ar(test_data,"aryule",4,false);
             case "arPsd"

@@ -31,7 +31,11 @@ classdef StatisticParameters < ExtractorParameterInterface
         function combinations = getPermutations()
             %GETPERMUTATIONS Calculates the permutations of the parameters
             %   All possible combinations are calculated and returned
-            combinations = StatisticParameters.allStatisticFeatures;
+            statisticFeatures = StatisticParameters.allStatisticFeatures;
+            combinations = StatisticParameters.empty(0,length(statisticFeatures));
+            for i=1:length(statisticFeatures)
+                combinations(i) = StatisticParameters(statisticFeatures(i));
+            end
         end
     end
 end

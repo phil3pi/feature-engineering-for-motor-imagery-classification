@@ -53,7 +53,7 @@ for kf=1:kfolds
             case "statistic"
                 train_data=FeatureExtractor.statistic(train_data,fs,parameters);
             case "ar"
-                train_data=FeatureExtractor.ar(train_data,"aryule",4,false);
+                train_data=FeatureExtractor.ar(train_data,parameters);
             case "arPsd"
                 train_data=FeatureExtractor.arPsd(train_data,fs,"pburg",4,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["median"]);
             case "lyapunov"
@@ -78,7 +78,7 @@ for kf=1:kfolds
             case "statistic"
                 test_data=FeatureExtractor.statistic(test_data,fs,parameters);
             case "ar"
-                test_data=FeatureExtractor.ar(test_data,"aryule",4,false);
+                test_data=FeatureExtractor.ar(test_data,parameters);
             case "arPsd"
                 test_data=FeatureExtractor.arPsd(test_data,fs,"pburg",4,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["median"]);
             case "lyapunov"

@@ -2,18 +2,23 @@ classdef FeatureExtractor
     %EXTRACTOR Contains several feature extractor methods
     %   Detailed explanation goes here
     methods(Static)
-        function ar_coeff = ar(eeg,method,order,use_white_noice_variance)
+        function ar_coeff = ar(eeg,ar_params)
             %AR_EXTRACTOR extract parameters of autoregressive model
             % The supported ar method types are: arcov, aryule, arburg,
             % armcov
-            if use_white_noice_variance
+            arguments
+                eeg (:,:,:);
+                ar_params (1,1) ArParameters;
+            end
+            order = ar_params.order;
+            if ar_params.use_white_noise
                 order = order + 1;
             end
             [channels,~,trials]=size(eeg);
             ar_coeff=nan(channels,order,trials);
             for trial=1:trials
                 for channel=1:channels
-                    switch method
+                    switch ar_params.method
                         case "arcov"
                             [a,e] = arcov(eeg(channel,:,trial),order);
                         case "aryule"
@@ -27,7 +32,7 @@ classdef FeatureExtractor
                     end
                     
                     % TODO: implement pcov, pburg, pmcov, pyulear later
-                    if use_white_noice_variance
+                    if ar_params.use_white_noise
                         coeff = [a,e];
                     else
                         coeff = a;
@@ -79,6 +84,10 @@ classdef FeatureExtractor
         function lyapunov_exp = lyapunovExponent(eeg,fs)
             %LYAPUNOVEXPONENT Extracts the lyapunov exponents of the time
             %series
+            arguments
+                eeg (:,:,:);
+                fs {mustBeNumeric};
+            end
             [channels,~,trials]=size(eeg);
             lyapunov_exp=nan(channels,1,trials);
             for trial=1:trials
@@ -112,6 +121,9 @@ classdef FeatureExtractor
 
         function var = waveletVariance(eeg)
             %WAVELETVARIANCE calculates the variance of wavelet coeff.
+            arguments
+                eeg (:,:,:);
+            end
             [channels,~,trials]=size(eeg);
             
             wsoi1 = modwt(eeg(1,:,1),'db2');
@@ -127,6 +139,11 @@ classdef FeatureExtractor
         end
 
         function corr = waveletCorrelation(eeg)
+            %WAVELETCORRELATION calculates the correlation between each
+            %channel signal
+            arguments
+                eeg (:,:,:);
+            end
             [channels,~,trials] = size(eeg);
             corr = nan(channels,channels-1,trials);
 

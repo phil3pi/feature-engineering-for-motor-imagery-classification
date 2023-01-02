@@ -42,7 +42,7 @@ classdef FeatureExtractor
             arguments
                 eeg (:,:,:);
                 fs {mustBeNumeric};
-                statistic_features StatisticParameters;
+                statistic_features (1,1) StatisticParameters;
             end
             [channels,~,trials]=size(eeg);
             statistics=nan(channels,length(statistic_features),trials);
@@ -63,7 +63,7 @@ classdef FeatureExtractor
             
             bands=psd_param.frequencyBands;
             [channels,~,trials]=size(eeg);
-            psd=nan(channels*length(psd_param.statisticParameters),length(bands),trials);
+            psd=nan(channels*length(psd_param.statisticParameters.statisticFeatures),length(bands),trials);
             for trial=1:trials
                 x=squeeze(eeg(:,:,trial))';
                 % TODO: eventually experiment with non-default parameters of pwelch
@@ -92,8 +92,8 @@ classdef FeatureExtractor
             %WAVELETENTROPY Summary of this function goes here
             %   Detailed explanation goes here
             arguments
-                eeg;
-                parameters WaveletEntropyParameters;
+                eeg (:,:,:);
+                parameters (1,1) WaveletEntropyParameters;
             end
             [channels,~,trials]=size(eeg);
             entropy_length=length(wentropy(eeg(1,:,1),...

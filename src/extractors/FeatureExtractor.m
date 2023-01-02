@@ -163,25 +163,31 @@ classdef FeatureExtractor
             end
         end
 
-        function ar_psd_features = arPsd(eeg,fs,method,order,selected_bands,statistic_features)
+        function ar_psd_features = arPsd(eeg,fs,ar_psd_param)
             %ARPSD calculate the psd with autoregression model
             % additionally statistic feature will be extracted of the
             % estimated psd
-            bands=FrequencyBand.getSpecificBands(selected_bands);
+            arguments
+                eeg (:,:,:);
+                fs {mustBeNumeric};
+                ar_psd_param (1,1) ArPsdParameters;
+            end
+            statistic_features = ar_psd_param.statistic.statisticFeatures;
+            bands=ar_psd_param.frequencyBands;
             [channels,~,trials]=size(eeg);
             ar_psd_features=nan(channels*length(statistic_features),length(bands),trials);
             for trial=1:trials
                 x=squeeze(eeg(:,:,trial))';
                 % TODO: experiment with non default parameters
-                switch method
+                switch ar_psd_param.method
                     case "pcov"
-                        [pxx,f]=pcov(x,order,[],fs);
+                        [pxx,f]=pcov(x,ar_psd_param.order,[],fs);
                     case "pmcov"
-                        [pxx,f]=pmcov(x,order,[],fs);
+                        [pxx,f]=pmcov(x,ar_psd_param.order,[],fs);
                     case "pburg"
-                        [pxx,f]=pburg(x,order,[],fs);
+                        [pxx,f]=pburg(x,ar_psd_param.order,[],fs);
                     case "pyulear"
-                        [pxx,f]=pyulear(x,order,[],fs);
+                        [pxx,f]=pyulear(x,ar_psd_param.order,[],fs);
                     otherwise
                         error("AR psd extractor only supports pcov, pmcov, pburg or pyulear");
                 end

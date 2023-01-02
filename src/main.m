@@ -20,7 +20,8 @@ window_sizes = [100]; %[100,20,10];
 
 for i=1:length(sampling_rates)
     data.resample(sampling_rates(i));
-    parametersList = [StatisticParameters("slope")];%["psd", "waveletEntropy", "waveletCorrelation", "statistic", "ar", "arPsd", "lyapunov"];
+    %parametersList = [StatisticParameters("slope")];%["psd", "waveletEntropy", "waveletCorrelation", "statistic", "ar", "arPsd", "lyapunov"];
+    parametersList=[PsdParameters(FrequencyBand.getAllBands,StatisticParameters(["std"]))];
     for parameter=parametersList
         [accuracy,accuracy_chance,kappa,kappa_chance]=train_classifier(data,window_sizes(i),parameter);
     

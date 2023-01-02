@@ -35,5 +35,6 @@ hold off;
 
 if filename ~= ""
     savefig(filename);
+    fprintf("Saved plot as %s\n",filename);
 end
 end

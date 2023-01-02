@@ -52,12 +52,18 @@ classdef FeatureExtractor
             end
         end
 
-        function psd = psd(eeg,fs,selected_bands,statistic_features)
+        function psd = psd(eeg,fs,psd_param)
             % PSD Calculate and returns the welch's power spectral density
             % estimate
-            bands=FrequencyBand.getSpecificBands(selected_bands);
+            arguments
+                eeg (:,:,:);
+                fs {mustBeNumeric};
+                psd_param (1,1) PsdParameters;
+            end
+            
+            bands=psd_param.frequencyBands;
             [channels,~,trials]=size(eeg);
-            psd=nan(channels*length(statistic_features),length(bands),trials);
+            psd=nan(channels*length(psd_param.statisticParameters),length(bands),trials);
             for trial=1:trials
                 x=squeeze(eeg(:,:,trial))';
                 % TODO: eventually experiment with non-default parameters of pwelch
@@ -65,7 +71,7 @@ classdef FeatureExtractor
                 for j=1:length(bands)
                     [~,ii1]=min(abs(f-bands(j).min));
                     [~,ii2]=min(abs(f-bands(j).max));
-                    psd(:,j,trial)=statistic_extractor(pxx(ii1:ii2,:),statistic_features,fs,1);
+                    psd(:,j,trial)=statistic_extractor(pxx(ii1:ii2,:),psd_param.statisticParameters,fs,1);
                 end
             end
         end

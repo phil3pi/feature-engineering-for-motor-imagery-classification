@@ -6,7 +6,6 @@ classdef ExtractorParameterInterface
     end
 
     methods (Abstract)
-        getPermutations(obj);
         toString(obj);
     end
 end

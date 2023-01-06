@@ -8,5 +8,5 @@ classdef ExtractorParameterInterface
     methods (Abstract)
         toString(obj);
     end
-end
 
+end

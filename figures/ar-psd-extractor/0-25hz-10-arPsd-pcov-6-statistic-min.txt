@@ -1,0 +1,2 @@
+signal:arparest:MatrixTooSmallForModel
+When X is a matrix, its number of rows must be greater than 3/2 times the model order.

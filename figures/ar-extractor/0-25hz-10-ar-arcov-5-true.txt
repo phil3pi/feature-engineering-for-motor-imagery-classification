@@ -1,0 +1,2 @@
+signal:arparest:VectorTooSmallForModel
+When X is a vector, it must have length greater than 3/2 times the model order.

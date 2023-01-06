@@ -1,0 +1,2 @@
+
+In order to calculate the slop at least 2 data-points are needed.

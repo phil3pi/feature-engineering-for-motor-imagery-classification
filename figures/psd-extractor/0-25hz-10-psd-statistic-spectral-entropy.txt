@@ -1,0 +1,2 @@
+signal:utilities:utilities:insufficientSignalLength
+Expected the length of the signals in "X" to be larger than 1.

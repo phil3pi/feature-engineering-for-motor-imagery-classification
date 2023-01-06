@@ -1,6 +1,9 @@
 function [pool] = setup_multithreading(numberOfWorkers)
-% This function setups the parallel pool only if no other pool is currently
-% running.
+% SETUP_MULTITHREADING This function setups the parallel pool only if no 
+% other pool is currently running.
+arguments
+    numberOfWorkers {mustBeNumeric};
+end
 pool=gcp('nocreate');
 if isempty(pool)
     pool=parpool(numberOfWorkers);

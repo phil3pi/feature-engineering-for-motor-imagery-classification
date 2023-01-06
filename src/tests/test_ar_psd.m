@@ -9,5 +9,5 @@ load(sprintf('../dataset/Training Data/DATAall_cleaneog_A0%dT_Fs250',patient_id)
 x=eeg(1,:,1);
 fs=250; %sampling rate
 
-r=FeatureExtractor.arPsd(x,fs,"pcov",5,["delta","theta","alpha","beta","gamma","high-gamma","broad"],["mean"]);
+r=FeatureExtractor.arPsd(x,fs, ArPsdParameters("pcov",5,StatisticParameters("mean"),FrequencyBand.getAllBands));
 disp(r);

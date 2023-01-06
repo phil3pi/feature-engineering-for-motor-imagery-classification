@@ -1,6 +1,15 @@
 function [t] = print_measures(N,fs,window_size,accuracy,accuracy_chance,kappa,kappa_chance,filename)
-%PRINT_MEASURES Summary of this function goes here
-%   Detailed explanation goes here
+%PRINT_MEASURES Creates a plot of the accuracy and kappa measures
+arguments
+    N {mustBeNumeric};
+    fs {mustBeNumeric};
+    window_size {mustBeNumeric};
+    accuracy (:,:) {mustBeNumeric};
+    accuracy_chance (:,:) {mustBeNumeric};
+    kappa (:,:) {mustBeNumeric};
+    kappa_chance (:,:) {mustBeNumeric};
+    filename string;
+end
 time=((0:N-1)/fs)-2; %in seconds; cue onset starts 2 seconds after the trial start. Cue onset is indicate with 0s
 %
 % Below is only plotting stuff

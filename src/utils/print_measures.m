@@ -7,7 +7,7 @@ time=((0:N-1)/fs)-2; %in seconds; cue onset starts 2 seconds after the trial sta
 %
 t=tiledlayout(2,1);
 t.TileSpacing='loose';
-title(t,'Performance measures of classification')
+%title(t,'Performance measures of classification')
 nexttile;
 % plot the average testing accuracy as a function of time
 % print accuracy value
@@ -34,6 +34,7 @@ ylim([0 1])
 hold off;
 
 if filename ~= ""
+    filename = sprintf("%0.2f-%s",max(mean_accuracy),filename);
     savefig(filename);
     fprintf("Saved plot as %s\n",filename);
 end

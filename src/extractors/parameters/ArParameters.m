@@ -10,7 +10,7 @@ classdef ArParameters < ExtractorParameterInterface
 
     properties(Access = private,Constant)
             method_list (1,:) string = ["arcov" "aryule" "arburg" "armcov"];
-            order_list (1,:) {mustBeNumeric} = [4 5 6];
+            order_list (1,:) {mustBeNumeric} = [3 4 5 6];
             use_white_noise_list (1,2) {logical} = [false, true];
     end
     

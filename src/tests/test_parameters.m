@@ -1,6 +1,6 @@
 r = WaveletEntropyParameters.getPermutations();
 
-obj = WaveletEntropyParameters("shannon","tranform1",4);
+obj = WaveletEntropyParameters("shannon","tranform1");
 disp(obj.toString);
 
 r2 = StatisticParameters.getPermutations;
@@ -25,3 +25,6 @@ r6 = ArPsdParameters.getPermutations;
 
 obj6 = ArPsdParameters("pcov",2,StatisticParameters("psd"),FrequencyBand.getAllBands);
 disp(obj6.toString);
+
+obj7 = LyapunovParameters();
+disp(obj7.toString);

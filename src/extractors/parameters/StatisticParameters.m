@@ -8,7 +8,7 @@ classdef StatisticParameters < ExtractorParameterInterface
 
     properties(Access=private,Constant)
         allStatisticFeatures = ["min","max","mean","median","std","var",...
-            "kurtosis","skewness","prctile","entropy","spectral-entropy"...
+            "kurtosis","skewness","prctile","entropy",... % "spectral-entropy"
             "slope"]
     end
     

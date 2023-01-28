@@ -1,4 +1,4 @@
-# Feature engineering for EEG classificatio
+# Feature engineering for EEG classification
 This repo contains the code for my Bachelor-Thesis: `Feature engineering for EEG classification`.
 
 ## Run the code

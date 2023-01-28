@@ -2,7 +2,7 @@ close all;clear all
 sub=1;
 Fs=250; %sampling rate
 %Load data
-load(sprintf('./Training Data/DATAall_cleaneog_A0%dT_Fs250',sub))
+load(sprintf('../dataset/Training Data/DATAall_cleaneog_A0%dT_Fs250',sub))
 %Remove artifactual trials
 artifacts=find(artifactsall==1);
 eeg(:,:,artifacts)=[];
@@ -34,14 +34,14 @@ for kf=1:kfolds
         [model_lda] = lda_train(Xtrain,Ytrain); %Train on training data
         [Ypred] = lda_predict(model_lda,Xtest); %Test on testing data
         c_matrix=confusionmat(Ytest,Ypred); %Compute confusion matrix
-        [accuracy(n,kf)] = statsOfMeasure(c_matrix); %Estimate accuracy
+        [accuracy(n,kf)] = stats_of_measure(c_matrix); %Estimate accuracy
 
         %Get chance level by permuting randomly the input matrix Xtest
         permuted_inds=randsample(length(Ytest),length(Ytest));
         Xtestperm=Xtest(permuted_inds,:);
         [Ypred] = lda_predict(model_lda,Xtestperm); %Test on testing data
         c_matrix=confusionmat(Ytest,Ypred); %Compute confusion matrix
-        [accuracy_chance(n,kf)] = statsOfMeasure(c_matrix); %Estimate accuracy        
+        [accuracy_chance(n,kf)] = stats_of_measure(c_matrix); %Estimate accuracy        
     end
 end
 

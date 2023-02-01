@@ -11,39 +11,25 @@ addpath('data/');
 
 setup_multithreading(8);
 
-data = Dataset(1);
-data.removeArtifacts();
-%data.removeOutliers("quartiles","spline");
+data_250 = Dataset(1);
+data_250.removeArtifacts();
 
-sampling_rates = [250, 50, 25];
-window_sizes = [100, 20, 10];
+data_50 = Dataset(1);
+data_50.removeArtifacts();
+data_50.resample(50);
 
-for i = 1:length(sampling_rates)
-    data.resample(sampling_rates(i));
-    %parametersList = StatisticParameters.getPermutations;
-    %parametersList = PsdParameters.getPermutations;
-    %parametersList = WaveletEntropyParameters.getPermutations;
-    %parametersList = [WaveletVarianceParameters()];
-    %parametersList = [WaveletCorrelationParameters()];
-    parametersList = ArParameters.getPermutations;
-    %parametersList = ArPsdParameters.getPermutations;
-    %parametersList = [LyapunovParameters()];
-    for parameter = parametersList
+% PsdParameters(FrequencyBand.getAllBands,StatisticParameters("std"))
+% StatisticParameters("mean")
+parameter = {ArPsdParameters("pyulear",6,StatisticParameters("min"),FrequencyBand.getAllBands),StatisticParameters("mean")};
 
-        try
-            [accuracy, accuracy_chance, kappa, kappa_chance] = train_classifier(data, window_sizes(i), parameter);
+try
+    [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifier(data_250, 100, parameter);
 
-            filename = sprintf('%shz-%s-%s.fig', string(sampling_rates(i)), string(window_sizes(i)), parameter.toString);
-            print_measures(data.N, data.fs, window_sizes(i), accuracy, accuracy_chance, kappa, kappa_chance, filename);
-        catch ME
-            filename = sprintf('0-%shz-%s-%s.txt', string(sampling_rates(i)), string(window_sizes(i)), parameter.toString);
-            fileID = fopen(filename, 'w');
-            fprintf(fileID, "%s\n", ME.identifier);
-            fprintf(fileID, ME.message);
-            disp(ME.message);
-            fclose(fileID);
-        end
-
-    end
-
+    print_measures(data_250.N, data_250.fs, 100, accuracy, accuracy_chance, kappa, kappa_chance, "final-classifier.fig");
+catch ME
+    fileID = fopen("final-classifier.txt", 'w');
+    fprintf(fileID, "%s\n", ME.identifier);
+    fprintf(fileID, ME.message);
+    disp(ME.message);
+    fclose(fileID);
 end

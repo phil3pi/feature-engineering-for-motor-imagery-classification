@@ -4,8 +4,8 @@ authors:
 - family-names: "Steinwender"
   given-names: "Philipp"
   orcid: "https://orcid.org/0000-0001-7138-6316"
-title: "Feature engineering for EEG classification"
+title: "Feature engineering for motor imagery classification"
 version: 1.0.4
 #doi: 10.5281/zenodo.1234 # TODO: create doi later
 date-released: 2023-02-28
-url: "https://github.com/phil3pi/feature-engineering-for-eeg-classification"
+url: "https://github.com/phil3pi/feature-engineering-for-motor-imagery-classification"

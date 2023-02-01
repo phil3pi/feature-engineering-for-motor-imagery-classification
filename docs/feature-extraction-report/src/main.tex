@@ -24,7 +24,7 @@
 \maketitle
 
 \begin{abstract}
-Classification of EEG data is a very hard task and involves often good data-preprocessing, feature-extraction and a correctly selected and trained model. This report focuses on the Feature-Engineering aspect and compares different feature extraction methods. The resulting performance is documented and discussed shortly. It should provide an basic overview about possible extraction methods and how they perform on EEG data during motor attempts.
+Classification of EEG data is a very hard task and involves often good data-preprocessing, feature-extraction and a correctly selected and trained model. This report focuses on the Feature-Engineering aspect and compares different feature extraction methods. The resulting performance is documented and discussed shortly. It should provide an basic overview about possible extraction methods and how they perform on EEG data during motor imagery.
 \end{abstract} \hspace{10pt}
 \newpage
 \tableofcontents
@@ -411,7 +411,7 @@ Extracting statistical features from time- or frequency-domain shows high classi
 
 Ar-Coefficients show an high performance (around 45\%). Additionally it is important to select the correct order for the ar-model. If the order is to low or to high, the prediction would be based on to few or to many data-points and therefore will be incorrect. An order of 3 or 4 is sufficient and performs excellent.
 
-Non promising features are the lyapunov exponents and the wavelet-entropy. The entropy measure performed overall very bad. It already showed in the statistic extractor that only small to no statistical significance is possible. Using the entropy for feature extraction might seem a good idea at first, but like the tests state perform very bad on the EEG of motor attempts.
+Non promising features are the lyapunov exponents and the wavelet-entropy. The entropy measure performed overall very bad. It already showed in the statistic extractor that only small to no statistical significance is possible. Using the entropy for feature extraction might seem a good idea at first, but like the tests state perform very bad on the EEG of motor imagery.
 
 The other two wavelet-extractors: wavelet-correlation and wavelet-variance performed tremendously good. Accuracies around 50\% show the high significance of this feature. Only the Ar-Psd extractor could achieve an higher classification performance (around 53\%).
 

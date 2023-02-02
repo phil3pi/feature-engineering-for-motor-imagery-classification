@@ -43,9 +43,12 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifi
 
         parfor n = 1:length(nn)
             disp([kf n])
-            
+            empty_training_vector = true;
             for i=1:length(extractor_parameters)
-                parameters = extractor_parameters{i}(1);
+                parameters = extractor_parameters{i};
+                if isempty(parameters)
+                    continue;
+                end
                 train_data = squeeze(train_data_nn(n, :, :, :));
                 switch parameters.name
                     case "psd"
@@ -69,15 +72,21 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifi
                 end
     
                 x_train_temp = permute(train_data, [3 1 2]); %Take win time points before the current time point up till the current time point (it's causal)
-                if i == 1
+                if empty_training_vector
                     x_train = x_train_temp(:, :);
+                    empty_training_vector = false;
                 else
                     x_train = cat(2,x_train,x_train_temp(:, :)); % x_train is of dimension [number of training trials x number of features]            
                 end
             end
+
+            empty_training_vector = true;
             
             for i=1:length(extractor_parameters)
-                parameters = extractor_parameters{i}(1);
+                parameters = extractor_parameters{i};
+                if isempty(parameters)
+                    continue;
+                end
                 test_data = squeeze(test_data_nn(n, :, :, :));
                 switch parameters.name
                     case "psd"
@@ -100,8 +109,9 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifi
                         error("Invalid extraction method. Only support: psd, waveletEntropy, waveletCorrelation, statistic, ar, arPsd, lyapunov.");
                 end
                 x_test_temp = permute(test_data, [3 1 2]);
-                if i == 1
+                if empty_training_vector
                     x_test = x_test_temp(:, :); % x_test is of dimension [number of testing trials x number of features]
+                    empty_training_vector = false;
                 else
                     x_test = cat(2, x_test, x_test_temp(:, :)); 
                 end

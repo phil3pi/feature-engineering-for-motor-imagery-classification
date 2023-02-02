@@ -18,18 +18,24 @@ data_50 = Dataset(1);
 data_50.removeArtifacts();
 data_50.resample(50);
 
-% PsdParameters(FrequencyBand.getAllBands,StatisticParameters("std"))
-% StatisticParameters("mean")
-parameter = {ArPsdParameters("pyulear",6,StatisticParameters("min"),FrequencyBand.getAllBands),StatisticParameters("mean")};
-
-try
-    [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifier(data_250, 100, parameter);
-
-    print_measures(data_250.N, data_250.fs, 100, accuracy, accuracy_chance, kappa, kappa_chance, "final-classifier.fig");
-catch ME
-    fileID = fopen("final-classifier.txt", 'w');
-    fprintf(fileID, "%s\n", ME.identifier);
-    fprintf(fileID, ME.message);
-    disp(ME.message);
-    fclose(fileID);
+parameter_list = get_parameters_combinations();
+for i=2:length(parameter_list)
+    parameter = parameter_list(i,1:6);
+    filename = "combination";
+    for j=1:length(parameter)
+        if ~isempty(parameter{j})
+            filename = filename + sprintf("-%s",parameter{j}.name);
+        end
+    end
+    try
+        [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifier(data_250, 100, parameter);
+        
+        print_measures(data_250.N, data_250.fs, 100, accuracy, accuracy_chance, kappa, kappa_chance, filename + ".fig");
+    catch ME
+        fileID = fopen("0-" + filename + ".txt", 'w');
+        fprintf(fileID, "%s\n", ME.identifier);
+        fprintf(fileID, ME.message);
+        disp(ME.message);
+        fclose(fileID);
+    end
 end

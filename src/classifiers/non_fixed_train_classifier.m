@@ -1,11 +1,9 @@
-function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifier(data, data_50, window_size_250, window_size_50, extractor_parameters)
+function [accuracy, accuracy_chance, kappa, kappa_chance] = non_fixed_train_classifier(data, window_size, extractor_parameters)
     %TRAIN_CLASSIFIER Summary of this function goes here
     %   Detailed explanation goes here
     arguments
         data Dataset;
-        data_50 Dataset;
-        window_size_250 {mustBeNumeric};
-        window_size_50 {mustBeNumeric};
+        window_size {mustBeNumeric};
         extractor_parameters (1,:) cell;
     end
 
@@ -13,8 +11,7 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifi
     rng('default') % set predefined random state for making results comparable
     cv_indixes = crossvalind('kfold', data.laball, kfolds);
     % performance measures
-    nn = window_size_250 + 1:window_size_250:data.N;
-    nn_50 = window_size_50 + 1:window_size_50:data_50.N;
+    nn = window_size + 1:window_size:data.N;
     accuracy = nan(length(nn), kfolds);
     accuracy_chance = nan(length(nn), kfolds);
     kappa = nan(length(nn), kfolds);
@@ -30,28 +27,16 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifi
         % This reduces the memory overhead of parfor if the thread size
         % continues to increase. Without pre-allocation each thread would need
         % to copy the complete eeg dataset
-        train_data_nn = nan(length(nn), data.channels, window_size_250 + 1, length(train_indices));
-        test_data_nn = nan(length(nn), data.channels, window_size_250 + 1, length(test_indices));
+        train_data_nn = nan(length(nn), data.channels, window_size + 1, length(train_indices));
+        test_data_nn = nan(length(nn), data.channels, window_size + 1, length(test_indices));
         y_train_nn = nan(length(nn), length(train_indices));
         y_test_nn = nan(length(nn), length(test_indices));
 
-        train_data_nn_50 = nan(length(nn_50), data_50.channels, window_size_50 + 1, length(train_indices));
-        test_data_nn_50 = nan(length(nn_50), data_50.channels, window_size_50 + 1, length(test_indices));
-        y_train_nn_50 = nan(length(nn_50), length(train_indices));
-        y_test_nn_50 = nan(length(nn_50), length(test_indices));
-
         for n = 1:length(nn)
-            train_data_nn(n, :, :, :) = data.eeg(:, nn(n) - window_size_250:nn(n), train_indices);
-            test_data_nn(n, :, :, :) = data.eeg(:, nn(n) - window_size_250:nn(n), test_indices);
+            train_data_nn(n, :, :, :) = data.eeg(:, nn(n) - window_size:nn(n), train_indices);
+            test_data_nn(n, :, :, :) = data.eeg(:, nn(n) - window_size:nn(n), test_indices);
             y_train_nn(n, :) = data.laball(train_indices);
             y_test_nn(n, :) = data.laball(test_indices);
-        end
-
-        for n = 1:length(nn_50)
-            train_data_nn_50(n, :, :, :) = data_50.eeg(:, nn_50(n) - window_size_50:nn_50(n), train_indices);
-            test_data_nn_50(n, :, :, :) = data_50.eeg(:, nn_50(n) - window_size_50:nn_50(n), test_indices);
-            y_train_nn_50(n, :) = data_50.laball(train_indices);
-            y_test_nn_50(n, :) = data_50.laball(test_indices);
         end
 
         fs = data.fs;
@@ -71,13 +56,10 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifi
                     case "waveletEntropy"
                         train_data = FeatureExtractor.waveletEntropy(train_data, parameters);
                     case "waveletVariance"
-                        train_data = squeeze(train_data_nn_50(n, :, :, :));
                         train_data = FeatureExtractor.waveletVariance(train_data);
                     case "waveletCorrelation"
-                        train_data = squeeze(train_data_nn_50(n, :, :, :));
                         train_data = FeatureExtractor.waveletCorrelation(train_data);
                     case "statistic"
-                        %train_data = squeeze(train_data_nn_50(n, :, :, :));
                         train_data = FeatureExtractor.statistic(train_data, fs, parameters);
                     case "ar"
                         train_data = FeatureExtractor.ar(train_data, parameters);
@@ -112,13 +94,10 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifi
                     case "waveletEntropy"
                         test_data = FeatureExtractor.waveletEntropy(test_data, parameters);
                     case "waveletVariance"
-                        test_data = squeeze(test_data_nn_50(n, :, :, :));
                         test_data = FeatureExtractor.waveletVariance(test_data);
                     case "waveletCorrelation"
-                        test_data = squeeze(test_data_nn_50(n, :, :, :));
                         test_data = FeatureExtractor.waveletCorrelation(test_data);
                     case "statistic"
-                        %test_data = squeeze(test_data_nn_50(n, :, :, :));
                         test_data = FeatureExtractor.statistic(test_data, fs, parameters);
                     case "ar"
                         test_data = FeatureExtractor.ar(test_data, parameters);

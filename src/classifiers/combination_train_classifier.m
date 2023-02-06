@@ -1,4 +1,4 @@
-function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifier(data, data_50, window_size_250, window_size_50, extractor_parameters)
+function [accuracy, accuracy_chance, kappa, kappa_chance] = combination_train_classifier(data, data_50, window_size_250, window_size_50, extractor_parameters)
     %TRAIN_CLASSIFIER Summary of this function goes here
     %   Detailed explanation goes here
     arguments
@@ -53,30 +53,30 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifi
             y_test_nn(n, :) = data.laball(test_indices);
         end
 
-        fs = data.fs;
-
         parfor n = 1:length(nn_250)
             disp([kf n])
             empty_training_vector = true;
             for i=1:length(extractor_parameters)
-                parameters = extractor_parameters{i};
-                if isempty(parameters)
+                if isempty(extractor_parameters{i})
                     continue;
                 end
-                train_data = squeeze(train_data_nn_250(n, :, :, :));
+                parameters = extractor_parameters{i}{1};
+                fs = extractor_parameters{i}{2};
+                if fs == 250
+                    train_data = squeeze(train_data_nn_250(n, :, :, :));
+                else
+                    train_data = squeeze(train_data_nn_50(n, :, :, :));
+                end
                 switch parameters.name
                     case "psd"
                         train_data = FeatureExtractor.psd(train_data, fs, parameters);
                     case "waveletEntropy"
                         train_data = FeatureExtractor.waveletEntropy(train_data, parameters);
                     case "waveletVariance"
-                        train_data = squeeze(train_data_nn_50(n, :, :, :));
                         train_data = FeatureExtractor.waveletVariance(train_data);
                     case "waveletCorrelation"
-                        train_data = squeeze(train_data_nn_50(n, :, :, :));
                         train_data = FeatureExtractor.waveletCorrelation(train_data);
                     case "statistic"
-                        %train_data = squeeze(train_data_nn_50(n, :, :, :));
                         train_data = FeatureExtractor.statistic(train_data, fs, parameters);
                     case "ar"
                         train_data = FeatureExtractor.ar(train_data, parameters);
@@ -100,24 +100,26 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifi
             empty_training_vector = true;
             
             for i=1:length(extractor_parameters)
-                parameters = extractor_parameters{i};
-                if isempty(parameters)
+                if isempty(extractor_parameters{i})
                     continue;
                 end
-                test_data = squeeze(test_data_nn_250(n, :, :, :));
+                parameters = extractor_parameters{i}{1};
+                fs = extractor_parameters{i}{2};
+                if fs == 250
+                    test_data = squeeze(test_data_nn_250(n, :, :, :));
+                else
+                    test_data = squeeze(test_data_nn_50(n, :, :, :));
+                end
                 switch parameters.name
                     case "psd"
                         test_data = FeatureExtractor.psd(test_data, fs, parameters);
                     case "waveletEntropy"
                         test_data = FeatureExtractor.waveletEntropy(test_data, parameters);
                     case "waveletVariance"
-                        test_data = squeeze(test_data_nn_50(n, :, :, :));
                         test_data = FeatureExtractor.waveletVariance(test_data);
                     case "waveletCorrelation"
-                        test_data = squeeze(test_data_nn_50(n, :, :, :));
                         test_data = FeatureExtractor.waveletCorrelation(test_data);
                     case "statistic"
-                        %test_data = squeeze(test_data_nn_50(n, :, :, :));
                         test_data = FeatureExtractor.statistic(test_data, fs, parameters);
                     case "ar"
                         test_data = FeatureExtractor.ar(test_data, parameters);

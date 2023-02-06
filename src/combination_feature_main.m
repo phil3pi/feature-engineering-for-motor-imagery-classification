@@ -19,16 +19,18 @@ data_50.removeArtifacts();
 data_50.resample(50);
 
 parameter_list = get_parameters_combinations();
-for i=2:length(parameter_list)
-    parameter = parameter_list(i,1:6);
+dim = size(parameter_list);
+for i=2:dim(1)
+    parameter = parameter_list(i,1:dim(2));
     filename = "combination";
     for j=1:length(parameter)
         if ~isempty(parameter{j})
-            filename = filename + sprintf("-%s",parameter{j}.name);
+            filename = filename + sprintf("-%s-%dhz",parameter{j}{1}.name,parameter{j}{2});
         end
     end
+    disp(filename);
     try
-        [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifier(data_250, 100, parameter);
+        [accuracy, accuracy_chance, kappa, kappa_chance] = combination_train_classifier(data_250, data_50, 100, 20, parameter);
         
         print_measures(data_250.N, data_250.fs, 100, accuracy, accuracy_chance, kappa, kappa_chance, filename + ".fig");
     catch ME

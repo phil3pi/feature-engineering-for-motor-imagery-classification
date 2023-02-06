@@ -9,7 +9,7 @@ psd = {[],{PsdParameters(FrequencyBand.getAllBands,StatisticParameters("std")),2
 arPsd = {[],{ArPsdParameters("pyulear",6,StatisticParameters("min"),FrequencyBand.getAllBands),250}};
 waveletVariance = {[],{WaveletVarianceParameters(),50}};
 waveletCorrelation = {[],{WaveletCorrelationParameters(),50}};
-parameters_combination_list = allcomb(statistics,ar,arPsd,waveletVariance);
+parameters_combination_list = allcomb(statistics,ar,psd,arPsd,waveletVariance,waveletCorrelation);
 
 deleted_lines = 0;
 for i = 1:length(parameters_combination_list)
@@ -25,7 +25,5 @@ for i = 1:length(parameters_combination_list)
         deleted_lines = deleted_lines + 1;
     end
 end
-
-
 end
 

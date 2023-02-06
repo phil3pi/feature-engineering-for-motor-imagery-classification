@@ -13,12 +13,15 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifi
     rng('default') % set predefined random state for making results comparable
     cv_indixes = crossvalind('kfold', data.laball, kfolds);
     % performance measures
-    nn = window_size_250 + 1:window_size_250:data.N;
+    nn_250 = window_size_250 + 1:window_size_250:data.N;
     nn_50 = window_size_50 + 1:window_size_50:data_50.N;
-    accuracy = nan(length(nn), kfolds);
-    accuracy_chance = nan(length(nn), kfolds);
-    kappa = nan(length(nn), kfolds);
-    kappa_chance = nan(length(nn), kfolds);
+
+    assert(length(nn_250) == length(nn_50),"Length of nn_250 is not equal to nn_50, should never happen!");
+
+    accuracy = nan(length(nn_250), kfolds);
+    accuracy_chance = nan(length(nn_250), kfolds);
+    kappa = nan(length(nn_250), kfolds);
+    kappa_chance = nan(length(nn_250), kfolds);
 
     tStart = tic;
 
@@ -30,33 +33,29 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifi
         % This reduces the memory overhead of parfor if the thread size
         % continues to increase. Without pre-allocation each thread would need
         % to copy the complete eeg dataset
-        train_data_nn = nan(length(nn), data.channels, window_size_250 + 1, length(train_indices));
-        test_data_nn = nan(length(nn), data.channels, window_size_250 + 1, length(test_indices));
-        y_train_nn = nan(length(nn), length(train_indices));
-        y_test_nn = nan(length(nn), length(test_indices));
+        train_data_nn_250 = nan(length(nn_250), data.channels, window_size_250 + 1, length(train_indices));
+        test_data_nn_250 = nan(length(nn_250), data.channels, window_size_250 + 1, length(test_indices));
 
         train_data_nn_50 = nan(length(nn_50), data_50.channels, window_size_50 + 1, length(train_indices));
         test_data_nn_50 = nan(length(nn_50), data_50.channels, window_size_50 + 1, length(test_indices));
-        y_train_nn_50 = nan(length(nn_50), length(train_indices));
-        y_test_nn_50 = nan(length(nn_50), length(test_indices));
 
-        for n = 1:length(nn)
-            train_data_nn(n, :, :, :) = data.eeg(:, nn(n) - window_size_250:nn(n), train_indices);
-            test_data_nn(n, :, :, :) = data.eeg(:, nn(n) - window_size_250:nn(n), test_indices);
+        y_train_nn = nan(length(nn_250), length(train_indices));
+        y_test_nn = nan(length(nn_250), length(test_indices));
+
+        for n = 1:length(nn_250)
+            train_data_nn_250(n, :, :, :) = data.eeg(:, nn_250(n) - window_size_250:nn_250(n), train_indices);
+            test_data_nn_250(n, :, :, :) = data.eeg(:, nn_250(n) - window_size_250:nn_250(n), test_indices);
+
+            train_data_nn_50(n, :, :, :) = data_50.eeg(:, nn_50(n) - window_size_50:nn_50(n), train_indices);
+            test_data_nn_50(n, :, :, :) = data_50.eeg(:, nn_50(n) - window_size_50:nn_50(n), test_indices);
+
             y_train_nn(n, :) = data.laball(train_indices);
             y_test_nn(n, :) = data.laball(test_indices);
         end
 
-        for n = 1:length(nn_50)
-            train_data_nn_50(n, :, :, :) = data_50.eeg(:, nn_50(n) - window_size_50:nn_50(n), train_indices);
-            test_data_nn_50(n, :, :, :) = data_50.eeg(:, nn_50(n) - window_size_50:nn_50(n), test_indices);
-            y_train_nn_50(n, :) = data_50.laball(train_indices);
-            y_test_nn_50(n, :) = data_50.laball(test_indices);
-        end
-
         fs = data.fs;
 
-        parfor n = 1:length(nn)
+        parfor n = 1:length(nn_250)
             disp([kf n])
             empty_training_vector = true;
             for i=1:length(extractor_parameters)
@@ -64,7 +63,7 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifi
                 if isempty(parameters)
                     continue;
                 end
-                train_data = squeeze(train_data_nn(n, :, :, :));
+                train_data = squeeze(train_data_nn_250(n, :, :, :));
                 switch parameters.name
                     case "psd"
                         train_data = FeatureExtractor.psd(train_data, fs, parameters);
@@ -105,7 +104,7 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = fixed_train_classifi
                 if isempty(parameters)
                     continue;
                 end
-                test_data = squeeze(test_data_nn(n, :, :, :));
+                test_data = squeeze(test_data_nn_250(n, :, :, :));
                 switch parameters.name
                     case "psd"
                         test_data = FeatureExtractor.psd(test_data, fs, parameters);

@@ -11,21 +11,16 @@ addpath('data/');
 
 setup_multithreading(8);
 
-data_250 = Dataset(1);
-data_250.removeArtifacts();
+data = Dataset(1);
+data.removeArtifacts();
+data.resample(50);
 
-data_50 = Dataset(1);
-data_50.removeArtifacts();
-data_50.resample(50);
+filename = "final-classifier";
 
-classifier = "slda";
-parameter = {{WaveletVarianceParameters(),50},{StatisticParameters("mean"),50}};
-
-filename = sprintf('waveletVariance-50hz-statistic-mean-50hz-%s',classifier);
 try
-    [accuracy, accuracy_chance, kappa, kappa_chance] = final_train_classifier(data_250, data_50, 100, 20, parameter,classifier);
+    [accuracy, accuracy_chance, kappa, kappa_chance] = train_all_classifier(data, 20);
     
-    print_measures(data_250.N, data_250.fs, 100, accuracy, accuracy_chance, kappa, kappa_chance, filename + ".fig");
+    print_measures(data.N, data.fs, 20, accuracy, accuracy_chance, kappa, kappa_chance, filename + ".fig");
 catch ME
     fileID = fopen("0-" + filename + ".txt", 'w');
     fprintf(fileID, "%s\n", ME.identifier);

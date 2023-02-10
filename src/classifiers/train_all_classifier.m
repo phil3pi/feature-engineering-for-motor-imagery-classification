@@ -60,7 +60,7 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = train_all_classifier
             x_test_temp = permute(x_test_temp, [3 1 2]);
             x_test = x_test_temp(:, :);
             test_data = squeeze(test_data_nn(n, :, :, :));
-            x_test_temp = FeatureExtractor.statistic(test_data, fs, parameters);
+            x_test_temp = FeatureExtractor.statistic(test_data, fs, StatisticParameters("mean"));
             x_test_temp = permute(x_test_temp, [3 1 2]);
             x_test = cat(2, x_test, x_test_temp(:, :)); 
 

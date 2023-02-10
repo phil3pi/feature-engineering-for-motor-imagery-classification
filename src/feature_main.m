@@ -11,7 +11,7 @@ addpath('data/');
 
 setup_multithreading(8);
 
-data = Dataset(1);
+data = Dataset(1,true);
 data.removeArtifacts();
 %data.removeOutliers("quartiles","spline");
 

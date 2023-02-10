@@ -11,10 +11,10 @@ addpath('data/');
 
 setup_multithreading(8);
 
-data_250 = Dataset(1);
+data_250 = Dataset(1,true);
 data_250.removeArtifacts();
 
-data_50 = Dataset(1);
+data_50 = Dataset(1,true);
 data_50.removeArtifacts();
 data_50.resample(50);
 

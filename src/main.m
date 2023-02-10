@@ -11,14 +11,18 @@ addpath('data/');
 
 setup_multithreading(8);
 
-data = Dataset(1);
+data = Dataset(1,true);
 data.removeArtifacts();
 data.resample(50);
+
+evaluation_data = Dataset(1,false);
+evaluation_data.removeArtifacts();
+evaluation_data.resample(50);
 
 filename = "final-classifier";
 
 try
-    [accuracy, accuracy_chance, kappa, kappa_chance] = train_all_classifier(data, 20);
+    [accuracy, accuracy_chance, kappa, kappa_chance] = train_all_classifier(data, evaluation_data, 20);
     
     print_measures(data.N, data.fs, 20, accuracy, accuracy_chance, kappa, kappa_chance, filename + ".fig");
 catch ME

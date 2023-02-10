@@ -19,11 +19,15 @@ classdef Dataset < handle
 
     methods
 
-        function obj = Dataset(patient_id)
+        function obj = Dataset(patient_id,is_training_data)
             %DATASET Construct an instance of this class
             %   load the dataset of the specified patient_id
             obj.patient_id = patient_id;
-            data = load(sprintf('../dataset/Training Data/DATAall_cleaneog_A0%dT_Fs250', obj.patient_id));
+            if is_training_data
+                data = load(sprintf('../dataset/Training Data/DATAall_cleaneog_A0%dT_Fs250', obj.patient_id));
+            else
+                data = load(sprintf('../dataset/Evaluation Data/DATAall_cleaneog_A0%dE_Fs250', obj.patient_id));
+            end
             obj.eeg = data.eeg;
             obj.artifactsall = data.artifactsall;
             obj.laball = data.laball;

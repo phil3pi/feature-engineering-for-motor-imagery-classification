@@ -52,4 +52,4 @@ writecell(classification_results,"classification-results.csv");
 
 fprintf('average accuracy: %.2f%%\n', mean(max_accuracy) * 100);
 fprintf('average kappa:    %.4f\n', mean(max_kappa));
-% print_measures(data.N, data.fs, 20, accuracy, accuracy_chance, kappa, kappa_chance, "average-final-classifier.fig");
+print_measures(data.N, data.fs, 20, accuracy, accuracy_chance, kappa, kappa_chance, "average-all-subjects-final-classifier.fig");

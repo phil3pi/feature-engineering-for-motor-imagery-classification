@@ -22,7 +22,7 @@ evaluation_data.resample(50);
 filename = "final-classifier";
 
 try
-    [accuracy, accuracy_chance, kappa, kappa_chance] = train_all_classifier(data, evaluation_data, 20);
+    [accuracy, accuracy_chance, kappa, kappa_chance] = final_train_all_classifier(data, evaluation_data, 20);
     
     print_measures(data.N, data.fs, 20, accuracy, accuracy_chance, kappa, kappa_chance, filename + ".fig");
 catch ME

@@ -1,4 +1,4 @@
-function [accuracy, accuracy_chance, kappa, kappa_chance] = final_train_all_classifier(data, evaluation_data, window_size)
+function [accuracy, accuracy_chance, kappa, kappa_chance, model] = final_train_all_classifier(data, evaluation_data, window_size)
     %TRAIN_CLASSIFIER Summary of this function goes here
     %   Detailed explanation goes here
     arguments
@@ -42,10 +42,6 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = final_train_all_clas
     fs = data.fs;
     
     n = 9; % time 3.6sec
-% base setup
-%     train_data = squeeze(train_data_nn(n, :, :, :));
-%     x_train_temp = permute(train_data, [3 1 2]);
-%     x_train = x_train_temp(:,:);
 
     train_data = squeeze(train_data_nn(n, :, :, :));
     x_train_temp = FeatureExtractor.waveletVariance(train_data);
@@ -63,20 +59,6 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = final_train_all_clas
     parfor n = 1:length(nn)
         disp(n);
 
-%         train_data = squeeze(train_data_nn(n, :, :, :));
-%         x_train_temp = FeatureExtractor.waveletVariance(train_data);
-%         x_train_temp = permute(x_train_temp, [3 1 2]);
-%         x_train = x_train_temp(:, :);
-%         train_data = squeeze(train_data_nn(n, :, :, :));
-%         x_train_temp = FeatureExtractor.statistic(train_data, fs, StatisticParameters("mean"));
-%         x_train_temp = permute(x_train_temp, [3 1 2]);
-%         x_train = cat(2,x_train,x_train_temp(:, :));
-        
-% base setup
-%         test_data = squeeze(test_data_nn(n, :, :, :));
-%         x_test_temp = permute(test_data, [3 1 2]);
-%         x_test = x_test_temp(:, :);
-
         test_data = squeeze(test_data_nn(n, :, :, :));
         x_test_temp = FeatureExtractor.waveletVariance(test_data);
         x_test_temp = permute(x_test_temp, [3 1 2]);
@@ -87,11 +69,8 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = final_train_all_clas
         x_test = cat(2, x_test, x_test_temp(:, :)); 
 
         y_test = y_test_nn(n, :);
-        % y_train = y_train_nn(n, :);
 
-        % [model] = lda_train(x_train, y_train);
         [y_pred] = lda_predict(model, x_test); % Test on testing data
-        
 
         c_matrix = confusionmat(y_test, y_pred);
         [accuracy(n), kappa(n)] = stats_of_measure(c_matrix); % Estimate accuracy

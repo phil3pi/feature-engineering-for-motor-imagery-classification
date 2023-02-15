@@ -22,6 +22,10 @@ model = cell(1,number_of_subjects);
 max_accuracy = nan(number_of_subjects, 1);
 max_kappa = nan(number_of_subjects, 1);
 
+% windows calculated with 
+% best_windows = get_classifier_windows;
+best_windows = [8; 9; 8; 7; 7; 7; 9; 8; 8];
+
 for subject_id=1:number_of_subjects
     
     data = Dataset(subject_id,true);
@@ -35,7 +39,7 @@ for subject_id=1:number_of_subjects
     filename = sprintf('subject-%d-final-classifier',subject_id);
     
     try
-        [accuracy(:,subject_id), accuracy_chance(:,subject_id), kappa(:,subject_id), kappa_chance(:,subject_id), model{subject_id}] = final_train_all_classifier(data, evaluation_data, 20);
+        [accuracy(:,subject_id), accuracy_chance(:,subject_id), kappa(:,subject_id), kappa_chance(:,subject_id), model{subject_id}] = final_train_all_classifier(data, evaluation_data, 20, best_windows(subject_id));
         max_accuracy(subject_id) = max(accuracy(:,subject_id));
         max_kappa(subject_id) = max(kappa(:,subject_id));
         print_measures(data.N, data.fs, 20, accuracy(:,subject_id), accuracy_chance(:,subject_id), kappa(:,subject_id), kappa_chance(:,subject_id), filename + ".fig");
@@ -47,9 +51,10 @@ for subject_id=1:number_of_subjects
         fclose(fileID);
     end
 end
-classification_results = {accuracy; accuracy_chance; kappa; kappa_chance};
+mean_acc = mean(max_accuracy) * 100;
+mean_kappa = mean(max_kappa);
+classification_results = {accuracy; accuracy_chance; kappa; kappa_chance; mean_acc; mean_kappa};
 writecell(classification_results,"classification-results.csv");
 
-fprintf('average accuracy: %.2f%%\n', mean(max_accuracy) * 100);
-fprintf('average kappa:    %.4f\n', mean(max_kappa));
-print_measures(data.N, data.fs, 20, accuracy, accuracy_chance, kappa, kappa_chance, "average-all-subjects-final-classifier.fig");
+fprintf('average accuracy: %.2f%%\n', mean_acc);
+fprintf('average kappa:    %.4f\n', mean_kappa);

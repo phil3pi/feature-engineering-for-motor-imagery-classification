@@ -1,10 +1,11 @@
-function [accuracy, accuracy_chance, kappa, kappa_chance, model] = final_train_all_classifier(data, evaluation_data, window_size)
+function [accuracy, accuracy_chance, kappa, kappa_chance, model] = final_train_all_classifier(data, evaluation_data, window_size, trained_window)
     %TRAIN_CLASSIFIER Summary of this function goes here
     %   Detailed explanation goes here
     arguments
         data Dataset;
         evaluation_data Dataset;
         window_size {mustBeNumeric};
+        trained_window {mustBeNumeric};
     end
 
     rng('default') % set predefined random state for making results comparable
@@ -40,24 +41,22 @@ function [accuracy, accuracy_chance, kappa, kappa_chance, model] = final_train_a
     end
 
     fs = data.fs;
-    
-    n = 9; % time 3.6sec
 
-    train_data = squeeze(train_data_nn(n, :, :, :));
+    train_data = squeeze(train_data_nn(trained_window, :, :, :));
     x_train_temp = FeatureExtractor.waveletVariance(train_data);
     x_train_temp = permute(x_train_temp, [3 1 2]);
     x_train = x_train_temp(:, :);
-    train_data = squeeze(train_data_nn(n, :, :, :));
+    train_data = squeeze(train_data_nn(trained_window, :, :, :));
     x_train_temp = FeatureExtractor.statistic(train_data, fs, StatisticParameters("mean"));
     x_train_temp = permute(x_train_temp, [3 1 2]);
     x_train = cat(2,x_train,x_train_temp(:, :));
 
-    y_train = y_train_nn(n, :);
+    y_train = y_train_nn(trained_window, :);
 
     [model] = lda_train(x_train, y_train);
 
     parfor n = 1:length(nn)
-        disp(n);
+        disp([trained_window, n]);
 
         test_data = squeeze(test_data_nn(n, :, :, :));
         x_test_temp = FeatureExtractor.waveletVariance(test_data);

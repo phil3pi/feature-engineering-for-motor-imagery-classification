@@ -1,5 +1,5 @@
 function [accuracy, accuracy_chance, kappa, kappa_chance] = combination_train_classifier(data, data_50, window_size_250, window_size_50, extractor_parameters)
-    %TRAIN_CLASSIFIER Summary of this function goes here
+    %COMBINATION_TRAIN_CLASSIFIER Summary of this function goes here
     %   Detailed explanation goes here
     arguments
         data Dataset;

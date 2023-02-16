@@ -40,7 +40,7 @@ for subject_id=1:number_of_subjects
     filename = sprintf('subject-%d-final-classifier',subject_id);
     
     try
-        [accuracy(:,subject_id), accuracy_chance(:,subject_id), kappa(:,subject_id), kappa_chance(:,subject_id), model{subject_id}] = final_train_all_classifier(data, evaluation_data, 20, best_windows(subject_id));
+        [accuracy(:,subject_id), accuracy_chance(:,subject_id), kappa(:,subject_id), kappa_chance(:,subject_id), model{subject_id}] = final_train_classifier(data, evaluation_data, 20, best_windows(subject_id));
         max_accuracy(subject_id) = max(accuracy(:,subject_id));
         max_kappa(subject_id) = max(kappa(:,subject_id));
         print_measures(data.N, data.fs, 20, accuracy(:,subject_id), accuracy_chance(:,subject_id), kappa(:,subject_id), kappa_chance(:,subject_id), filename + ".fig");

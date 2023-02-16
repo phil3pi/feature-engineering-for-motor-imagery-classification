@@ -1,5 +1,5 @@
-function [accuracy, accuracy_chance, kappa, kappa_chance, model] = final_train_all_classifier(data, evaluation_data, window_size, trained_window)
-    %TRAIN_CLASSIFIER Summary of this function goes here
+function [accuracy, accuracy_chance, kappa, kappa_chance, model] = final_train_classifier(data, evaluation_data, window_size, trained_window)
+    %FINAL_TRAIN_CLASSIFIER Summary of this function goes here
     %   Detailed explanation goes here
     arguments
         data Dataset;

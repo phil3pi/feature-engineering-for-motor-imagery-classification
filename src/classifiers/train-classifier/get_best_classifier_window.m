@@ -1,5 +1,5 @@
 function [accuracy, accuracy_chance, kappa, kappa_chance, model] = get_best_classifier_window(data, window_size, trained_window)
-    %TRAIN_CLASSIFIER Summary of this function goes here
+    %GET_BEST_CLASSIFIER_WINDOW Summary of this function goes here
     %   Detailed explanation goes here
     arguments
         data Dataset;

@@ -1,5 +1,5 @@
 function [accuracy, accuracy_chance, kappa, kappa_chance] = single_feature_train_classifier(data, window_size, parameters)
-    %TRAIN_CLASSIFIER Summary of this function goes here
+    %SINGLE_FEATURE_TRAIN_CLASSIFIER Summary of this function goes here
     %   Detailed explanation goes here
     arguments
         data Dataset;

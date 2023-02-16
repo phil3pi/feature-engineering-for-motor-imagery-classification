@@ -3,6 +3,7 @@ close all; clear all;
 
 addpath('classifiers/');
 addpath('classifiers/lda');
+addpath('classifiers/train-classifier/');
 addpath('extractors/');
 addpath('extractors/parameters/')
 addpath('utils/');

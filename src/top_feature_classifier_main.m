@@ -23,7 +23,7 @@ parameter = {{WaveletVarianceParameters(),50},{StatisticParameters("mean"),50}};
 
 filename = sprintf('waveletVariance-50hz-statistic-mean-50hz-%s',classifier);
 try
-    [accuracy, accuracy_chance, kappa, kappa_chance] = final_train_classifier(data_250, data_50, 100, 20, parameter,classifier);
+    [accuracy, accuracy_chance, kappa, kappa_chance] = multiple_features_train_classifier(data_250, data_50, 100, 20, parameter,classifier);
     
     print_measures(data_250.N, data_250.fs, 100, accuracy, accuracy_chance, kappa, kappa_chance, filename + ".fig");
 catch ME

@@ -1,4 +1,4 @@
-function [accuracy, accuracy_chance, kappa, kappa_chance] = final_train_classifier(data, data_50, window_size_250, window_size_50, extractor_parameters, model_type)
+function [accuracy, accuracy_chance, kappa, kappa_chance] = multiple_features_train_classifier(data, data_50, window_size_250, window_size_50, extractor_parameters, model_type)
     %TRAIN_CLASSIFIER Summary of this function goes here
     %   Detailed explanation goes here
     arguments

@@ -1,4 +1,4 @@
-function [accuracy, accuracy_chance, kappa, kappa_chance] = train_classifier(data, window_size, parameters)
+function [accuracy, accuracy_chance, kappa, kappa_chance] = single_feature_train_classifier(data, window_size, parameters)
     %TRAIN_CLASSIFIER Summary of this function goes here
     %   Detailed explanation goes here
     arguments

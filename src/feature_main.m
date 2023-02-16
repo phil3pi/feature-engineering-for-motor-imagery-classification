@@ -29,7 +29,7 @@ for i = 1:length(sampling_rates)
     for parameterPermutation = parameterPermutationList
         for parameter = parameterPermutation{1}
             try
-                [accuracy, accuracy_chance, kappa, kappa_chance] = train_classifier(data, window_sizes(i), parameter);
+                [accuracy, accuracy_chance, kappa, kappa_chance] = single_feature_train_classifier(data, window_sizes(i), parameter);
     
                 filename = sprintf('%shz-%s-%s.fig', string(sampling_rates(i)), string(window_sizes(i)), parameter.toString);
                 print_measures(data.N, data.fs, window_sizes(i), accuracy, accuracy_chance, kappa, kappa_chance, filename);

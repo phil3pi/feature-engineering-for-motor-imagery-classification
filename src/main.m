@@ -58,5 +58,9 @@ mean_kappa = mean(max_kappa);
 classification_results = {accuracy; accuracy_chance; kappa; kappa_chance; mean_acc; mean_kappa};
 writecell(classification_results,"classification-results.csv");
 
+for subject_id=1:number_of_subjects
+    writetable(shapley_object{subject_id}.ShapleyValues, sprintf('shapley_values_subject_%d.csv',subject_id));
+end
+
 fprintf('average accuracy: %.2f%%\n', mean_acc);
 fprintf('average kappa:    %.4f\n', mean_kappa);

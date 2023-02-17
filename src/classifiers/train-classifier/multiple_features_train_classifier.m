@@ -6,7 +6,7 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = multiple_features_tr
         data_50 Dataset;
         window_size_250 {mustBeNumeric};
         window_size_50 {mustBeNumeric};
-        extractor_parameters (1,:) cell;
+        extractor_parameters (1, :) cell;
         model_type string;
     end
 
@@ -17,7 +17,7 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = multiple_features_tr
     nn_250 = window_size_250 + 1:window_size_250:data.N;
     nn_50 = window_size_50 + 1:window_size_50:data_50.N;
 
-    assert(length(nn_250) == length(nn_50),"Length of nn_250 is not equal to nn_50, should never happen!");
+    assert(length(nn_250) == length(nn_50), "Length of nn_250 is not equal to nn_50, should never happen!");
 
     accuracy = nan(length(nn_250), kfolds);
     accuracy_chance = nan(length(nn_250), kfolds);
@@ -57,17 +57,22 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = multiple_features_tr
         parfor n = 1:length(nn_250)
             disp([kf n])
             empty_training_vector = true;
-            for i=1:length(extractor_parameters)
+
+            for i = 1:length(extractor_parameters)
+
                 if isempty(extractor_parameters{i})
                     continue;
                 end
+
                 parameters = extractor_parameters{i}{1};
                 fs = extractor_parameters{i}{2};
+
                 if fs == 250
                     train_data = squeeze(train_data_nn_250(n, :, :, :));
                 else
                     train_data = squeeze(train_data_nn_50(n, :, :, :));
                 end
+
                 switch parameters.name
                     case "psd"
                         train_data = FeatureExtractor.psd(train_data, fs, parameters);
@@ -88,29 +93,35 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = multiple_features_tr
                     otherwise
                         error("Invalid extraction method. Only support: psd, waveletEntropy, waveletCorrelation, statistic, ar, arPsd, lyapunov.");
                 end
-    
+
                 x_train_temp = permute(train_data, [3 1 2]); %Take win time points before the current time point up till the current time point (it's causal)
+
                 if empty_training_vector
                     x_train = x_train_temp(:, :);
                     empty_training_vector = false;
                 else
-                    x_train = cat(2,x_train,x_train_temp(:, :)); % x_train is of dimension [number of training trials x number of features]            
+                    x_train = cat(2, x_train, x_train_temp(:, :)); % x_train is of dimension [number of training trials x number of features]
                 end
+
             end
 
             empty_training_vector = true;
-            
-            for i=1:length(extractor_parameters)
+
+            for i = 1:length(extractor_parameters)
+
                 if isempty(extractor_parameters{i})
                     continue;
                 end
+
                 parameters = extractor_parameters{i}{1};
                 fs = extractor_parameters{i}{2};
+
                 if fs == 250
                     test_data = squeeze(test_data_nn_250(n, :, :, :));
                 else
                     test_data = squeeze(test_data_nn_50(n, :, :, :));
                 end
+
                 switch parameters.name
                     case "psd"
                         test_data = FeatureExtractor.psd(test_data, fs, parameters);
@@ -131,13 +142,16 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = multiple_features_tr
                     otherwise
                         error("Invalid extraction method. Only support: psd, waveletEntropy, waveletCorrelation, statistic, ar, arPsd, lyapunov.");
                 end
+
                 x_test_temp = permute(test_data, [3 1 2]);
+
                 if empty_training_vector
                     x_test = x_test_temp(:, :); % x_test is of dimension [number of testing trials x number of features]
                     empty_training_vector = false;
                 else
-                    x_test = cat(2, x_test, x_test_temp(:, :)); 
+                    x_test = cat(2, x_test, x_test_temp(:, :));
                 end
+
             end
 
             y_test = y_test_nn(n, :);
@@ -166,7 +180,6 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = multiple_features_tr
             else
                 [y_pred] = predict(model, x_test); % Test on testing data
             end
-            
 
             c_matrix = confusionmat(y_test, y_pred);
             [accuracy(n, kf), kappa(n, kf)] = stats_of_measure(c_matrix); % Estimate accuracy
@@ -180,23 +193,10 @@ function [accuracy, accuracy_chance, kappa, kappa_chance] = multiple_features_tr
             else
                 [y_pred] = predict(model, x_test_perm); %Test on testing data
             end
-            
+
             c_matrix = confusionmat(y_test, y_pred); %Compute confusion matrix
             [accuracy_chance(n, kf), kappa_chance(n, kf)] = stats_of_measure(c_matrix); %Estimate accuracy
 
-%             if n == 8
-%                 merged_data = cat(2,x_train,permute(y_train,[2 1]));
-%                 tbl = array2table(merged_data);
-%                 blackbox = fitcensemble(tbl,'merged_data67', ...
-%                     'PredictorNames',tbl.Properties.VariableNames(1:66), ...
-%                     'ClassNames',[1 2 3 4]);
-%                 queryPoint = tbl(end,:);
-% 
-%                 explainer = shapley(blackbox,'QueryPoint',queryPoint);
-%                 
-%                 explainer.ShapleyValues
-%                 plot(explainer);
-%             end
         end
 
     end

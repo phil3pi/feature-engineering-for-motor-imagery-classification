@@ -19,8 +19,8 @@ function [accuracy, accuracy_chance, kappa, kappa_chance, model, explainer] = fi
 
     tStart = tic;
 
-    [~,~,training_trials] = size(data.eeg);
-    [~,~,evaluation_trials] = size(evaluation_data.eeg);
+    [~, ~, training_trials] = size(data.eeg);
+    [~, ~, evaluation_trials] = size(evaluation_data.eeg);
 
     % Pre-allocate a buffered matrix of all window sizes.
     % This reduces the memory overhead of parfor if the thread size
@@ -49,22 +49,22 @@ function [accuracy, accuracy_chance, kappa, kappa_chance, model, explainer] = fi
     train_data = squeeze(train_data_nn(trained_window, :, :, :));
     x_train_temp = FeatureExtractor.statistic(train_data, fs, StatisticParameters("mean"));
     x_train_temp = permute(x_train_temp, [3 1 2]);
-    x_train = cat(2,x_train,x_train_temp(:, :));
+    x_train = cat(2, x_train, x_train_temp(:, :));
 
     y_train = y_train_nn(trained_window, :);
 
     [model] = lda_train(x_train, y_train);
-    
-    % calculate shapley values
-    merged_data = cat(2,x_train,permute(y_train,[2 1]));
-    tbl = array2table(merged_data);
-    blackbox = fitcecoc(tbl,'merged_data67', ...
-        'PredictorNames',tbl.Properties.VariableNames(1:66), ...
-        'ClassNames',[1 2 3 4]);
-    queryPoint = tbl(end,:);
 
-    explainer = shapley(blackbox,'QueryPoint',queryPoint);
-    
+    % calculate shapley values
+    merged_data = cat(2, x_train, permute(y_train, [2 1]));
+    tbl = array2table(merged_data);
+    blackbox = fitcecoc(tbl, 'merged_data67', ...
+        'PredictorNames', tbl.Properties.VariableNames(1:66), ...
+        'ClassNames', [1 2 3 4]);
+    queryPoint = tbl(end, :);
+
+    explainer = shapley(blackbox, 'QueryPoint', queryPoint);
+
     %explainer.ShapleyValues
     %plot(explainer);
 
@@ -78,7 +78,7 @@ function [accuracy, accuracy_chance, kappa, kappa_chance, model, explainer] = fi
         test_data = squeeze(test_data_nn(n, :, :, :));
         x_test_temp = FeatureExtractor.statistic(test_data, fs, StatisticParameters("mean"));
         x_test_temp = permute(x_test_temp, [3 1 2]);
-        x_test = cat(2, x_test, x_test_temp(:, :)); 
+        x_test = cat(2, x_test, x_test_temp(:, :));
 
         y_test = y_test_nn(n, :);
 
@@ -92,7 +92,7 @@ function [accuracy, accuracy_chance, kappa, kappa_chance, model, explainer] = fi
         x_test_perm = x_test(permuted_inds, :);
 
         [y_pred] = lda_predict(model, x_test_perm); %Test on testing data
-        
+
         c_matrix = confusionmat(y_test, y_pred); %Compute confusion matrix
         [accuracy_chance(n), kappa_chance(n)] = stats_of_measure(c_matrix); %Estimate accuracy
     end

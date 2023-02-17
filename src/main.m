@@ -62,6 +62,10 @@ writecell(classification_results, "classification-results.csv");
 
 for subject_id = 1:number_of_subjects
     writetable(shapley_object{subject_id}.ShapleyValues, sprintf('shapley_values_subject_%d.csv', subject_id));
+    t = tiledlayout(1, 1);
+    nexttile
+    plot(shapley_object{subject_id})
+    exportgraphics(t, sprintf('shapley_plot_subject_%d.jpg', subject_id));
 end
 
 fprintf('average accuracy: %.2f%%\n', mean_acc);

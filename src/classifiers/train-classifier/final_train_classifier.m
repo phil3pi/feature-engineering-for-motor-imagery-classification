@@ -1,4 +1,4 @@
-function [accuracy, accuracy_chance, kappa, kappa_chance, model] = final_train_classifier(data, evaluation_data, window_size, trained_window)
+function [accuracy, accuracy_chance, kappa, kappa_chance, model, explainer] = final_train_classifier(data, evaluation_data, window_size, trained_window)
     %FINAL_TRAIN_CLASSIFIER Summary of this function goes here
     %   Detailed explanation goes here
     arguments
@@ -54,6 +54,19 @@ function [accuracy, accuracy_chance, kappa, kappa_chance, model] = final_train_c
     y_train = y_train_nn(trained_window, :);
 
     [model] = lda_train(x_train, y_train);
+    
+    % calculate shapley values
+    merged_data = cat(2,x_train,permute(y_train,[2 1]));
+    tbl = array2table(merged_data);
+    blackbox = fitcensemble(tbl,'merged_data67', ...
+        'PredictorNames',tbl.Properties.VariableNames(1:66), ...
+        'ClassNames',[1 2 3 4]);
+    queryPoint = tbl(end,:);
+
+    explainer = shapley(blackbox,'QueryPoint',queryPoint);
+    
+    %explainer.ShapleyValues
+    %plot(explainer);
 
     parfor n = 1:length(nn)
         disp([trained_window, n]);
